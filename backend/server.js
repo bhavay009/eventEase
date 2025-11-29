@@ -7,7 +7,10 @@ const { PrismaClient } = require('@prisma/client');
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Root route
