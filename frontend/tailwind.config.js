@@ -1,0 +1,70 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        luxury: {
+          50: '#faf9f7',
+          100: '#f5f3f0',
+          200: '#e8e4dd',
+          300: '#d4ccc0',
+          400: '#b8ab9b',
+          500: '#9d8c7a',
+          600: '#8b7a68',
+          700: '#736559',
+          800: '#5f544a',
+          900: '#4f4640',
+        },
+        gold: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
+        burgundy: {
+          50: '#fdf2f8',
+          100: '#fce7f3',
+          200: '#fbcfe8',
+          300: '#f9a8d4',
+          400: '#f472b6',
+          500: '#ec4899',
+          600: '#db2777',
+          700: '#be185d',
+          800: '#9f1239',
+          900: '#831843',
+        },
+        navy: {
+          50: '#f0f4f8',
+          100: '#d9e2ec',
+          200: '#bcccdc',
+          300: '#9fb3c8',
+          400: '#829ab1',
+          500: '#627d98',
+          600: '#486581',
+          700: '#334e68',
+          800: '#243b53',
+          900: '#102a43',
+        },
+      },
+      fontFamily: {
+        'luxury': ['Playfair Display', 'serif'],
+        'sans': ['Inter', 'sans-serif'],
+      },
+      backgroundImage: {
+        'luxury-gradient': 'linear-gradient(135deg, #102a43 0%, #243b53 50%, #1a1a1a 100%)',
+        'gold-gradient': 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+      },
+    },
+  },
+  plugins: [],
+}
