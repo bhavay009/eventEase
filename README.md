@@ -1,187 +1,150 @@
-# EventEase - Event & Booking Management System
+EventEase – Event & Booking Management System
+1. Overview
 
-A full-stack event management platform built with React, Node.js, Express, and MySQL.
+EventEase is a full-stack web application designed to streamline event creation, booking, seat allocation, and attendee management. It provides a centralized solution for organizers to efficiently manage events while giving attendees a simple way to browse, book, and receive updates.
+This project demonstrates end-to-end full-stack development using React, Node.js, Express.js, MySQL, REST APIs, authentication, filtering, searching, and analytics.
 
-## Features
+2. Problem Statement
 
-- 🔐 **Authentication**: JWT-based login/signup with role-based access (Admin/Attendee)
-- 📅 **Event Management**: Create, view, edit, and delete events (Admin)
-- 🎫 **Booking System**: Book tickets for events with seat selection
-- 📊 **Analytics Dashboard**: Comprehensive analytics for admins
-- 🎨 **Modern UI**: Built with React and TailwindCSS
-- 🔒 **Protected Routes**: Route protection based on authentication and roles
+Traditional event management often suffers from manual errors, inefficient tracking of registrations, seat allocation issues, and lack of centralized reporting. EventEase addresses these issues by providing an automated platform for organizers and attendees to interact seamlessly.
+(Information sourced from proposal document.) 
 
-## Tech Stack
+EventEase Project Proposal (5)
 
-### Frontend
-- React 18
-- React Router
-- TailwindCSS
-- Recharts (for analytics)
-- Vite
+3. System Architecture
 
-### Backend
-- Node.js
-- Express.js
-- Prisma ORM
-- MySQL (compatible with PlanetScale, Railway)
-- JWT Authentication
-- bcryptjs for password hashing
-- express-validator for validation
+EventEase follows a structured full-stack architecture:
 
-## Project Structure
+Frontend → Backend (REST API) → Relational Database (MySQL)
 
-```
-eventEase/
-├── backend/
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── eventController.js
-│   │   ├── bookingController.js
-│   │   └── analyticsController.js
-│   ├── middleware/
-│   │   ├── auth.js
-│   │   └── role.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── eventRoutes.js
-│   │   ├── bookingRoutes.js
-│   │   └── analyticsRoutes.js
-│   ├── prisma/
-│   │   └── schema.prisma
-│   ├── server.js
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   └── App.jsx
-│   └── package.json
-└── mysql/
-    └── schema.sql
-```
+Architecture Components:
 
-## Setup Instructions
+Frontend: React.js, React Router, TailwindCSS (Fetch API)
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MySQL database (or use PlanetScale/Railway)
-- npm or yarn
+Backend: Node.js with Express.js
 
-### Backend Setup
+Database: MySQL (Relational)
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
+Authentication: JWT-based login/signup with role-based access (Admin/Attendee)
 
-2. Install dependencies:
-```bash
-npm install
-```
+Hosting Stack:
 
-3. Create a `.env` file (copy from `.env.example`):
-```bash
-cp .env.example .env
-```
+Frontend: Vercel or Netlify
 
-4. Update `.env` with your database URL and JWT secret:
-```env
-DATABASE_URL="mysql://user:password@localhost:3306/eventease"
-JWT_SECRET="your-secret-key"
-PORT=3001
-```
+Backend: Railway
 
-5. Run Prisma migrations:
-```bash
-npx prisma migrate dev
-```
+Database: PlanetScale
 
-6. Generate Prisma client:
-```bash
-npx prisma generate
-```
+(Architecture reference from proposal.) 
 
-7. Start the server:
-```bash
-npm run dev
-```
+EventEase Project Proposal (5)
 
-The backend will run on `http://localhost:3001`
+4. Key Features
 
-### Frontend Setup
+Authentication & Authorization
 
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
+Secure registration and login
 
-2. Install dependencies:
-```bash
-npm install
-```
+JWT-based authentication
 
-3. Create a `.env` file (copy from `.env.example`):
-```bash
-cp .env.example .env
-```
+Role-based access control (Admin/Attendee)
 
-4. Update `.env` with your backend URL:
-```env
-VITE_API_URL=http://localhost:3001
-```
+CRUD Operations
 
-5. Start the development server:
-```bash
-npm run dev
-```
+Create, read, update, and delete events, sessions, and tickets
 
-The frontend will run on `http://localhost:5173`
+Frontend Routing
 
-## API Endpoints
+Pages include Home, Login, Dashboard, Event Details, Booking, and Profile
 
-### Authentication
-- `POST /api/auth/signup` - Register a new user
-- `POST /api/auth/login` - Login user
+Event Management
 
-### Events
-- `GET /api/events` - Get all events (public)
-- `GET /api/events/:id` - Get event by ID (public)
-- `POST /api/events` - Create event (Admin only)
-- `PUT /api/events/:id` - Update event (Admin only)
-- `DELETE /api/events/:id` - Delete event (Admin only)
+Organizers can create and manage events
 
-### Bookings
-- `POST /api/bookings` - Create booking (Authenticated)
-- `GET /api/bookings/:id` - Get booking by ID (Authenticated)
-- `GET /api/bookings/user/:id` - Get user bookings (Authenticated)
+Session and seat management
 
-### Analytics
-- `GET /api/analytics` - Get analytics data (Admin only)
+Booking System
 
-## Deployment
+Attendees can browse events, book tickets, and track booking details
 
-### Backend (Railway)
+Filtering & Searching
 
-1. Connect your repository to Railway
-2. Set environment variables in Railway dashboard
-3. Railway will automatically deploy
+Filter events by date, type, and location
 
-### Frontend (Vercel)
+Search events by name
 
-1. Connect your repository to Vercel
-2. Set environment variables (VITE_API_URL)
-3. Vercel will automatically deploy
+Dynamic Data Fetching
 
-## Default Admin Account
+Real-time updates via REST API calls
 
-To create an admin account, you can either:
-1. Update a user's role directly in the database: `UPDATE User SET role='admin' WHERE email='your-email@example.com';`
-2. Or sign up normally and manually change the role in the database
+Notifications
 
-## License
+Confirmation and update notifications for attendees
 
-MIT
+Reporting & Analytics
+
+Dashboard displaying event statistics, attendee count, and booking metrics
+
+(Feature set from proposal.) 
+
+EventEase Project Proposal (5)
+
+5. Tech Stack
+Layer	Technologies
+Frontend	React.js, React Router, TailwindCSS
+Backend	Node.js, Express.js
+Database	MySQL
+Authentication	JWT
+Hosting	Vercel/Netlify (Frontend), Railway (Backend), PlanetScale (DB)
+
+(Tech stack section reference.) 
+
+EventEase Project Proposal (5)
+
+6. API Overview
+Endpoint	Method	Description	Access
+/api/auth/signup	POST	Register new user	Public
+/api/auth/login	POST	User login and token generation	Public
+/api/events	GET	List events with filtering and searching	Authenticated
+/api/events/:id	PUT	Update event details	Admin only
+/api/events/:id	DELETE	Delete event	Admin only
+/api/bookings	POST	Book tickets for an event	Authenticated
+/api/bookings/:id	GET	View booking details	Authenticated
+
+(API specification sourced from proposal.) 
+
+EventEase Project Proposal (5)
+
+7. Expected Outcome
+
+According to the project proposal, EventEase aims to deliver:
+
+A complete event and booking management system
+
+Improved attendee experience through streamlined booking
+
+Real-time analytics for event organizers
+
+Secure authentication and authorization
+
+Effective CRUD operations and data handling
+
+Filtering, searching, and dynamic display of events
+
+Fully deployed frontend, backend, and database, accessible via URLs
+
+(Outcome section from proposal.) 
+
+EventEase Project Proposal (5)
+
+8. Future Enhancements
+
+Online payment gateway integration
+
+QR-based ticket scanning system
+
+Real-time notifications and reminders
+
+Multi-organizer dashboards
+
+AI-based personalized event recommendations
