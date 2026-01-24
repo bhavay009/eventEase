@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes');
@@ -31,16 +32,17 @@ app.use(cors({
 
 app.use(express.json());
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({ message: 'EventEase Backend API is running!' });
-});
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
 
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/analytics', analyticsRoutes);
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

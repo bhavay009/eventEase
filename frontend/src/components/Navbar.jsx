@@ -15,19 +15,19 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path
 
   return (
-    <nav className="bg-gray-900 text-white sticky top-0 z-50 border-b border-gray-800">
+    <nav className="sticky top-0 z-50 bg-gradient-to-b from-navy-900/80 to-navy-800/60 backdrop-blur border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left Section - Logo and Navigation */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold tracking-tight">EVENTEASE®</span>
+              <span className="text-2xl font-bold tracking-tight text-gold-400">EVENTEASE®</span>
             </Link>
             
             <div className="hidden md:flex items-center space-x-6">
               <Link
                 to="/"
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium elegant-underline ${
                   isActive('/') ? 'text-gold-400' : 'text-gray-300 hover:text-white'
                 }`}
               >
@@ -35,7 +35,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/events"
-                className={`text-sm font-medium transition-colors ${
+                className={`text-sm font-medium elegant-underline ${
                   isActive('/events') || location.pathname.startsWith('/events/')
                     ? 'text-gold-400' 
                     : 'text-gray-300 hover:text-white'
@@ -46,7 +46,7 @@ const Navbar = () => {
               {isAuthenticated && (
                 <Link
                   to="/dashboard"
-                  className={`text-sm font-medium transition-colors ${
+                  className={`text-sm font-medium elegant-underline ${
                     isActive('/dashboard')
                       ? 'text-gold-400'
                       : 'text-gray-300 hover:text-white'
@@ -60,21 +60,21 @@ const Navbar = () => {
 
           {/* Center Section - Location and Actions */}
           <div className="hidden lg:flex items-center space-x-6">
-            <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="flex items-center space-x-2 text-sm text-gray-300">
               <span>📍</span>
               <span>India</span>
             </div>
             {isOrganizer && (
               <Link
                 to="/admin/events"
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                className="text-sm font-medium text-gray-300 hover:text-white elegant-underline"
               >
                 Create Listings
               </Link>
             )}
             <Link
               to="/events"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              className="text-sm font-medium text-gray-300 hover:text-white elegant-underline"
             >
               Browse Events
             </Link>
@@ -82,7 +82,7 @@ const Navbar = () => {
 
           {/* Right Section - Search and Auth */}
           <div className="flex items-center space-x-4">
-            <button className="hidden md:block p-2 text-gray-400 hover:text-white transition-colors">
+            <button className="hidden md:block p-2 text-gray-300 hover:text-white hover-glow rounded-lg">
               <MagnifyingGlassIcon className="h-5 w-5" />
             </button>
             
@@ -92,7 +92,7 @@ const Navbar = () => {
                   to="/profile"
                   className="flex items-center space-x-2"
                 >
-                  <div className="w-8 h-8 bg-gold-600 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gold-600 rounded-full flex items-center justify-center hover-glow">
                     <span className="text-white text-xs font-bold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </span>
@@ -101,7 +101,7 @@ const Navbar = () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white elegant-underline"
                 >
                   Logout
                 </button>
@@ -109,7 +109,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="px-4 py-2 text-sm font-medium bg-white text-gray-900 rounded hover:bg-gray-100 transition-colors"
+                className="px-4 py-2 text-sm font-medium btn-luxury btn-glow text-white"
               >
                 Login / Sign Up
               </Link>

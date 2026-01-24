@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -17,7 +18,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen">
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -67,6 +68,7 @@ function App() {
             />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <Footer />
         </div>
       </Router>
     </AuthProvider>
@@ -74,4 +76,3 @@ function App() {
 }
 
 export default App
-

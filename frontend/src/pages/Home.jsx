@@ -52,53 +52,62 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - SkillBox Style */}
-      <div className="bg-white py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Main Heading */}
-          <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-4 text-center">
-            Everything Live!
-          </h1>
-          
-          {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            Book live events (music, comedy, art, theatre), workshops and online events.
-          </p>
-
-          {/* Centered Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto mb-16">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search events, artists or celebrities"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-16 pr-6 py-5 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-200"
-              />
+    <div className="min-h-screen">
+      <section className="relative w-full h-[70vh] overflow-hidden">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="https://videos.pexels.com/video-files/7525996/7525996-sd_640_360_25fps.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+          <div className="text-white">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-4">
+              Experience Live Shows
+            </h1>
+            <p className="text-lg md:text-2xl text-gray-200 max-w-2xl mb-8">
+              Book premium concerts, comedy, theatre and immersive events near you.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <a href="#discover" className="px-8 py-4 btn-luxury btn-glow text-white font-bold">
+                Discover Shows
+              </a>
+              <form onSubmit={handleSearch} className="w-full sm:w-auto">
+                <div className="relative">
+                  <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                  <input
+                    type="text"
+                    placeholder="Search events, artists or venues"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full sm:w-80 pl-12 pr-4 py-4 rounded-xl glass-dark focus:outline-none focus:ring-2 focus:ring-gold-500"
+                  />
+                </div>
+              </form>
             </div>
-          </form>
-
-          {/* Events Carousel */}
+          </div>
+        </div>
+      </section>
+      <div className="py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="flex space-x-6 overflow-hidden">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex-shrink-0 w-80 h-96 bg-gray-200 rounded-lg animate-pulse"></div>
+                <div key={i} className="flex-shrink-0 w-80 h-96 glass-dark rounded-2xl animate-pulse"></div>
               ))}
             </div>
           ) : events.length > 0 ? (
             <div className="relative">
-              {/* Left Arrow */}
               <button
                 onClick={scrollLeft}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 glass-dark rounded-full p-3 hover-glow transition-colors"
                 aria-label="Scroll left"
               >
-                <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
+                <ChevronLeftIcon className="h-6 w-6 text-white" />
               </button>
-
-              {/* Scrollable Container */}
               <div
                 ref={scrollContainerRef}
                 className="flex space-x-6 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
@@ -110,9 +119,8 @@ const Home = () => {
                     to={`/events/${event.id}`}
                     className="flex-shrink-0 w-80 group"
                   >
-                    <div className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                      {/* Event Image */}
-                      <div className="relative h-96 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
+                    <div className="card-luxury overflow-hidden transition-all duration-300">
+                      <div className="relative h-96 overflow-hidden bg-gradient-to-br from-gray-900 to-black">
                         {event.image_url ? (
                           <img
                             src={event.image_url}
@@ -128,18 +136,12 @@ const Home = () => {
                             <span className="text-white/50 text-sm">No Image</span>
                           </div>
                         )}
-                        
-                        {/* Overlay Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        
-                        {/* Price Badge */}
-                        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full">
-                          <span className="text-sm font-bold text-gray-900">
+                        <div className="absolute top-4 right-4 glass-dark px-4 py-2 rounded-full">
+                          <span className="text-sm font-bold text-white">
                             ₹{event.price.toLocaleString('en-IN')}
                           </span>
                         </div>
-
-                        {/* Sold Out / Low Seats Badge */}
                         {event.remaining_seats <= 0 && (
                           <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
                             SOLD OUT
@@ -150,8 +152,6 @@ const Home = () => {
                             Only {event.remaining_seats} left!
                           </div>
                         )}
-
-                        {/* Event Info Overlay */}
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                           <h3 className="text-2xl font-bold mb-2 line-clamp-2">{event.title}</h3>
                           <div className="flex items-center space-x-4 text-sm text-gray-200">
@@ -176,48 +176,45 @@ const Home = () => {
                   </Link>
                 ))}
               </div>
-
-              {/* Right Arrow */}
               <button
                 onClick={scrollRight}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 glass-dark rounded-full p-3 hover-glow transition-colors"
                 aria-label="Scroll right"
               >
-                <ChevronRightIcon className="h-6 w-6 text-gray-700" />
+                <ChevronRightIcon className="h-6 w-6 text-white" />
               </button>
             </div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-gray-600 text-lg">No events available at the moment.</p>
+              <p className="text-gray-300 text-lg">No events available at the moment.</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Bottom CTA Section - SkillBox Style */}
-      <div className="bg-white border-t border-gray-200 py-16">
+      <div id="discover" className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-4">
-              Events
+            <h2 className="text-5xl md:text-6xl font-black text-white mb-4">
+              Premium Events
             </h2>
-            <p className="text-2xl md:text-3xl font-bold text-gray-700 mb-2">
-              DO-IT-YOURSELF event listing platform
+            <p className="text-2xl md:text-3xl font-bold text-gray-200 mb-2">
+              Discover and book unforgettable experiences
             </p>
-            <p className="text-xl text-gray-600 mb-8">
-              Make your events live in under 5 minutes
+            <p className="text-xl text-gray-300 mb-8">
+              Make your events live in minutes
             </p>
             <div className="flex justify-center space-x-4">
               <Link
                 to="/events"
-                className="px-8 py-4 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition-colors"
+                className="px-8 py-4 btn-luxury text-white font-bold hover-glow"
               >
                 View Events
               </Link>
               {isOrganizer && (
                 <Link
                   to="/admin/events"
-                  className="px-8 py-4 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition-colors"
+                  className="px-8 py-4 btn-luxury text-white font-bold hover-glow"
                 >
                   Create Event
                 </Link>
@@ -225,7 +222,7 @@ const Home = () => {
               {!isAuthenticated && (
                 <Link
                   to="/signup"
-                  className="px-8 py-4 bg-gold-600 text-white font-bold rounded-lg hover:bg-gold-700 transition-colors"
+                  className="px-8 py-4 btn-luxury text-white font-bold btn-glow"
                 >
                   Get Started
                 </Link>
