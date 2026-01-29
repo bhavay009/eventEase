@@ -152,7 +152,7 @@ const Events = () => {
         {loading ? (
           <div className="space-y-12">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-48 bg-gray-50 animate-pulse rounded-sm" />
+              <div key={i} className="h-48 bg-gray-50 rounded-lg skeleton" />
             ))}
           </div>
         ) : events.length === 0 ? (
@@ -179,7 +179,7 @@ const Events = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="group flex flex-col md:flex-row items-stretch border-b border-gray-100 pb-12 hover:border-[#b45309]/30 transition-colors cursor-pointer"
+                  className="group flex flex-col md:flex-row items-stretch border-b border-gray-100 pb-12 hover:border-transparent hover-lift p-6 -mx-6 rounded-xl hover:bg-white hover:shadow-luxury-sm transition-all duration-300 cursor-pointer"
                 >
                   {/* Left: Date Column */}
                   <div className="md:w-32 flex-shrink-0 flex flex-col pt-2 md:pr-8 md:border-r border-gray-100 mb-4 md:mb-0">

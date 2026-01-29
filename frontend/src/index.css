@@ -22,6 +22,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: var(--color-light);
   color: var(--color-dark);
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 h1,
@@ -52,17 +58,78 @@ h6 {
 }
 
 /* Utilities */
+/* Utilities */
+.glass {
+  background: rgba(26, 20, 16, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.text-glow {
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+.btn-glow {
+  box-shadow: 0 0 20px rgba(180, 83, 9, 0.4);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 .btn-primary {
   background-color: var(--color-primary);
   color: white;
   padding: 0.75rem 2rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.05em;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(180, 83, 9, 0.3);
+}
+
+.btn-primary:hover:after {
+  opacity: 1;
 }
 
 /* Improved Ticket Mask - Left Serrated Edge / Stub Look */

@@ -203,7 +203,7 @@ const Home = () => {
                       <div className="flex items-center space-x-6">
                         <Link
                           to={`/events/${featuredEvent.id}`}
-                          className="bg-[#b45309] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest hover:bg-[#8e3a00] transition-colors shadow-md"
+                          className="btn-primary shadow-lg shadow-orange-900/20"
                         >
                           Get Tickets
                         </Link>
@@ -249,8 +249,8 @@ const Home = () => {
 
         <div className="space-y-12">
           {loading ? (
-            <div className="animate-pulse space-y-8">
-              {[1, 2, 3].map(i => <div key={i} className="h-44 bg-gray-100 rounded-lg" />)}
+            <div className="space-y-8">
+              {[1, 2, 3].map(i => <div key={i} className="h-44 bg-gray-100 rounded-lg skeleton" />)}
             </div>
           ) : (
             events.map((event, index) => {
@@ -262,7 +262,7 @@ const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex flex-col md:flex-row items-stretch group cursor-pointer"
+                  className="flex flex-col md:flex-row items-stretch group cursor-pointer hover-lift p-4 -mx-4 rounded-xl hover:bg-white hover:shadow-luxury-sm transition-all duration-300"
                 >
                   {/* Left: Date */}
                   <div className="md:w-32 flex-shrink-0 flex flex-col items-center justify-start pt-4 border-r border-gray-100 md:pr-8 md:mr-8 mb-6 md:mb-0">
@@ -283,8 +283,8 @@ const Home = () => {
                       {event.location}
                     </p>
 
-                    <div className="flex items-center space-x-6 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                      <Link to={`/events/${event.id}`} className="bg-[#1e1e1e] text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#b45309] transition-colors">
+                    <div className="flex items-center space-x-6 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-75">
+                      <Link to={`/events/${event.id}`} className="bg-[#1e1e1e] text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#b45309] transition-colors shadow-lg shadow-black/20">
                         Get Tickets
                       </Link>
                       <Link to={`/events/${event.id}`} className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-[#1e1e1e]">
