@@ -1,194 +1,89 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: #b45309;
+  /* Bronze */
+  --color-primary-hover: #92400e;
+  --color-dark: #1a1410;
+  /* Dark Black/Brown */
+  --color-light: #ffffff;
+  --color-text-main: #1e1e1e;
+  --color-text-muted: #a69d96;
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #0b1220 0%, #0d1424 50%, #0a0a0a 100%);
-  color: #e5e7eb;
+  background: var(--color-light);
+  color: var(--color-dark);
 }
 
-* {
-  box-sizing: border-box;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Playfair Display', serif;
 }
 
-/* Custom scrollbar - luxury style */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #101827;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #f59e0b, #b45309);
-  border-radius: 8px;
-  box-shadow: inset 0 0 4px rgba(255,255,255,0.2);
+  background: #d6d3d1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #b45309, #92400e);
+  background: #a8a29e;
 }
 
-/* Smooth transitions */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
+/* Utilities */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
 }
 
-/* Luxury card hover effects */
-.card-luxury {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  background: rgba(17,24,39,0.6);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(245, 158, 11, 0.15);
-  border-radius: 16px;
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
 }
 
-.card-luxury::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.1), transparent);
-  transition: left 0.5s;
+/* Improved Ticket Mask - Left Serrated Edge / Stub Look */
+.ticket-mask {
+  -webkit-mask-image: radial-gradient(circle at -4px 50%, transparent 12px, black 13px);
+  mask-image: radial-gradient(circle at -4px 50%, transparent 12px, black 13px);
 }
 
-.card-luxury:hover::before {
-  left: 100%;
-}
-
-.card-luxury:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(245, 158, 11, 0.18);
-}
-
-/* Luxury button effects */
-.btn-luxury {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
-  box-shadow: 0 8px 28px rgba(245, 158, 11, 0.35);
-  border-radius: 12px;
-}
-
-.btn-luxury::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.btn-luxury:hover::before {
-  left: 100%;
-}
-
-.btn-luxury:hover {
-  box-shadow: 0 16px 36px rgba(245, 158, 11, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-glow {
-  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
-  animation: pulse-glow 2s infinite;
-}
-
-@keyframes pulse-glow {
-  0% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 12px rgba(245, 158, 11, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-  }
-}
-
-/* Gold accent borders */
-.gold-border {
-  border: 2px solid transparent;
-  background: linear-gradient(white, white) padding-box,
-              linear-gradient(135deg, #f59e0b, #d97706) border-box;
-}
-
-/* Loading animation - luxury style */
-@keyframes shimmer-luxury {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.skeleton-luxury {
-  animation: shimmer-luxury 2s infinite linear;
-  background: linear-gradient(to right, #f5f3f0 8%, #e8e4dd 18%, #f5f3f0 33%);
-  background-size: 1000px 100%;
-}
-
-/* Text gradient - gold */
-.text-gold-gradient {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.glass-dark {
-  background: rgba(17,24,39,0.6);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.hover-glow:hover {
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25), 0 10px 30px rgba(245, 158, 11, 0.15);
-  transform: translateY(-2px);
-}
-
-/* Elegant underline */
-.elegant-underline {
-  position: relative;
-  display: inline-block;
-}
-
-.elegant-underline::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #f59e0b, #d97706);
-  transition: width 0.3s ease;
-}
-
-.elegant-underline:hover::after {
-  width: 100%;
-}
-
-/* Hide scrollbar for carousel */
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* Full Ticket Shape (Notches on corners) - For Cards if needed */
+.ticket-shape-full {
+  -webkit-mask-image:
+    radial-gradient(circle at 0 0, transparent 0, black 0),
+    radial-gradient(circle at 100% 0, transparent 15px, black 16px),
+    radial-gradient(circle at 0 100%, transparent 0, black 0),
+    radial-gradient(circle at 100% 100%, transparent 15px, black 16px);
+  mask-image:
+    radial-gradient(circle at 0 0, transparent 0, black 0),
+    radial-gradient(circle at 100% 0, transparent 15px, black 16px),
+    radial-gradient(circle at 0 100%, transparent 0, black 0),
+    radial-gradient(circle at 100% 100%, transparent 15px, black 16px);
+  mask-position: top left, top right, bottom left, bottom right;
+  mask-size: 51% 51%;
+  mask-repeat: no-repeat;
 }

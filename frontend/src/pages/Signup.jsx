@@ -36,58 +36,47 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-lg w-full">
-        {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-900 rounded-lg mb-5 shadow-lg">
-            <span className="text-white font-bold text-3xl">E</span>
-          </div>
-          <h2 className="text-5xl font-black text-gray-900 mb-3">Join EventEase</h2>
-          <p className="text-gray-600 text-lg">Start your journey with amazing events</p>
+    <div className="min-h-screen bg-white flex items-center justify-center py-20 px-6">
+      <div className="max-w-md w-full">
+        {/* Logo Section */}
+        <div className="text-center mb-12">
+          <Link to="/" className="inline-block group">
+            <h1 className="text-4xl font-serif font-bold text-[#1a1410] tracking-tight mb-2 group-hover:text-[#b45309] transition-colors">
+              Event Ease
+            </h1>
+            <span className="text-xs uppercase tracking-[0.3em] text-[#a69d96]">
+              Theatre & Events
+            </span>
+          </Link>
+          <h2 className="text-2xl font-serif mt-10 text-[#1a1410]">Join Event Ease</h2>
+          <p className="text-[#a69d96] text-sm mt-2">Start your journey with amazing events</p>
         </div>
 
-        {/* User Type Selection */}
-        <div className="mb-8">
-          <label className="block text-sm font-semibold text-gray-900 mb-4 text-center">
-            I want to...
-          </label>
-          <div className="grid grid-cols-2 gap-4">
+        {/* Minimal Form */}
+        <div className="bg-white p-0">
+
+          {/* User Type Selection */}
+          <div className="flex gap-4 mb-8 border-b border-gray-100 pb-8">
             <button
               type="button"
               onClick={() => setUserType('customer')}
-              className={`p-6 rounded-lg border-2 transition-all ${
-                userType === 'customer'
-                  ? 'border-gray-900 bg-gray-50 shadow-lg scale-105'
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-              }`}
+              className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${userType === 'customer' ? 'bg-[#1a1410] text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
             >
-              <div className="text-4xl mb-3">🎫</div>
-              <div className="font-bold text-gray-900 mb-1">Attend Events</div>
-              <div className="text-xs text-gray-600">Discover and book events</div>
+              Attend
             </button>
             <button
               type="button"
               onClick={() => setUserType('organizer')}
-              className={`p-6 rounded-lg border-2 transition-all ${
-                userType === 'organizer'
-                  ? 'border-gray-900 bg-gray-50 shadow-lg scale-105'
-                  : 'border-gray-300 bg-white hover:border-gray-400'
-              }`}
+              className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${userType === 'organizer' ? 'bg-[#b45309] text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
             >
-              <div className="text-4xl mb-3">🎪</div>
-              <div className="font-bold text-gray-900 mb-1">Host Events</div>
-              <div className="text-xs text-gray-600">Create and manage events</div>
+              Host
             </button>
           </div>
-        </div>
 
-        {/* Form Card */}
-        <div className="bg-white rounded-lg shadow-lg p-10 border border-gray-200">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-5">
+          <form className="space-y-8" onSubmit={handleSubmit}>
+            <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
+                <label htmlFor="name" className="block text-xs font-bold uppercase tracking-widest text-[#a69d96] mb-2">
                   Full Name
                 </label>
                 <input
@@ -98,12 +87,12 @@ const Signup = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors text-gray-900 placeholder-gray-400"
+                  className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 transition-colors text-[#1a1410] placeholder-gray-300 font-serif text-lg"
                   placeholder="John Doe"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                <label htmlFor="email" className="block text-xs font-bold uppercase tracking-widest text-[#a69d96] mb-2">
                   Email Address
                 </label>
                 <input
@@ -114,12 +103,12 @@ const Signup = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors text-gray-900 placeholder-gray-400"
+                  className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 transition-colors text-[#1a1410] placeholder-gray-300 font-serif text-lg"
                   placeholder="you@example.com"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
+                <label htmlFor="password" className="block text-xs font-bold uppercase tracking-widest text-[#a69d96] mb-2">
                   Password
                 </label>
                 <input
@@ -130,42 +119,32 @@ const Signup = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors text-gray-900 placeholder-gray-400"
+                  className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 transition-colors text-[#1a1410] placeholder-gray-300 font-serif text-lg"
                   placeholder="••••••••"
                 />
-                <p className="mt-2 text-xs text-gray-500">Must be at least 6 characters</p>
+                <p className="mt-2 text-[10px] uppercase tracking-wide text-gray-400">At least 6 characters</p>
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-600 p-4 rounded-lg">
-                <p className="text-sm text-red-800 font-medium">{error}</p>
+              <div className="bg-red-50 border-l-2 border-red-500 p-4">
+                <p className="text-sm text-red-600">{error}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="bg-gray-900 text-white w-full py-4 rounded-lg font-bold text-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
+              className="w-full py-4 bg-[#1a1410] text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#b45309] transition-all disabled:opacity-70"
             >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Creating account...
-                </span>
-              ) : (
-                `Create ${userType === 'organizer' ? 'Organizer' : 'Customer'} Account`
-              )}
+              {loading ? 'Creating...' : `Create ${userType === 'organizer' ? 'Organizer' : 'Customer'} Account`}
             </button>
 
             <div className="text-center pt-4">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <Link to="/login" className="font-bold text-gray-900 hover:text-gray-700">
-                  Sign in
+              <p className="text-sm text-[#a69d96]">
+                Already a member?{' '}
+                <Link to="/login" className="font-bold text-[#1a1410] border-b border-[#1a1410] pb-0.5 hover:text-[#b45309] hover:border-[#b45309] transition-colors">
+                  Sign In
                 </Link>
               </p>
             </div>

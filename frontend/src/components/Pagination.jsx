@@ -45,7 +45,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-2 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all"
+        className="px-3 py-2 rounded-lg border-2 border-[#475569] text-gray-300 font-semibold hover:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Previous page"
       >
         <ChevronLeftIcon className="h-5 w-5" />
@@ -54,7 +54,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       {pageNumbers.map((page, index) => {
         if (page === '...') {
           return (
-            <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+            <span key={`ellipsis-${index}`} className="px-2 text-gray-400">
               ...
             </span>
           )
@@ -64,10 +64,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
               currentPage === page
-                ? 'bg-gray-900 text-white shadow-lg transform scale-105'
-                : 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-500'
+                ? 'bg-blue-500 text-white'
+                : 'border-2 border-[#475569] text-gray-300 hover:border-blue-500'
             }`}
             aria-label={`Go to page ${page}`}
             aria-current={currentPage === page ? 'page' : undefined}
@@ -80,7 +80,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-2 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-gray-300 transition-all"
+        className="px-3 py-2 rounded-lg border-2 border-[#475569] text-gray-300 font-semibold hover:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Next page"
       >
         <ChevronRightIcon className="h-5 w-5" />

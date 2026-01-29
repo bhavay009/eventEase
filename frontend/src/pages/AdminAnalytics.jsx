@@ -47,16 +47,16 @@ const AdminAnalytics = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      <div className="flex justify-center items-center min-h-screen bg-[#1e293b]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
   }
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-white p-8">
-        <p className="text-gray-600">No analytics data available</p>
+      <div className="min-h-screen bg-[#1e293b] p-8">
+        <p className="text-gray-300">No analytics data available</p>
       </div>
     )
   }
@@ -80,27 +80,27 @@ const AdminAnalytics = () => {
   })) || []
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#1e293b]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-black text-gray-900 mb-8">Analytics Dashboard</h1>
+        <h1 className="text-4xl font-black text-white mb-8">Analytics Dashboard</h1>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h3 className="text-gray-500 text-sm font-medium mb-2">Total Events</h3>
-            <p className="text-3xl font-bold text-gray-900">{analytics.totalEvents}</p>
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h3 className="text-gray-400 text-sm font-medium mb-2">Total Events</h3>
+            <p className="text-3xl font-bold text-white">{analytics.totalEvents}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h3 className="text-gray-500 text-sm font-medium mb-2">Total Bookings</h3>
-            <p className="text-3xl font-bold text-gray-900">{analytics.totalBookings}</p>
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h3 className="text-gray-400 text-sm font-medium mb-2">Total Bookings</h3>
+            <p className="text-3xl font-bold text-white">{analytics.totalBookings}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h3 className="text-gray-500 text-sm font-medium mb-2">Total Users</h3>
-            <p className="text-3xl font-bold text-gray-900">{analytics.totalUsers}</p>
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h3 className="text-gray-400 text-sm font-medium mb-2">Total Users</h3>
+            <p className="text-3xl font-bold text-white">{analytics.totalUsers}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h3 className="text-gray-500 text-sm font-medium mb-2">Total Revenue</h3>
-            <p className="text-3xl font-bold text-gray-900">
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h3 className="text-gray-400 text-sm font-medium mb-2">Total Revenue</h3>
+            <p className="text-3xl font-bold text-white">
               ₹{analytics.totalRevenue?.toLocaleString('en-IN') || '0'}
             </p>
           </div>
@@ -110,8 +110,8 @@ const AdminAnalytics = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Monthly Revenue */}
           {monthlyRevenueData.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-              <h2 className="text-xl font-bold mb-4 text-gray-900">Monthly Revenue</h2>
+            <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+              <h2 className="text-xl font-bold mb-4 text-white">Monthly Revenue</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={monthlyRevenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -127,8 +127,8 @@ const AdminAnalytics = () => {
 
         {/* Bookings Per Event */}
         {bookingsPerEventData.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h2 className="text-xl font-bold mb-4 text-gray-900">Top Events by Bookings</h2>
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h2 className="text-xl font-bold mb-4 text-white">Top Events by Bookings</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={bookingsPerEventData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -145,8 +145,8 @@ const AdminAnalytics = () => {
 
         {/* Seat Occupancy */}
         {seatOccupancyData.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8 border border-gray-200">
-            <h2 className="text-xl font-bold mb-4 text-gray-900">Seat Occupancy Rate (Top 5 Events)</h2>
+          <div className="glass-dark rounded-lg shadow-lg p-6 mb-8 border border-white/10">
+            <h2 className="text-xl font-bold mb-4 text-white">Seat Occupancy Rate (Top 5 Events)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={seatOccupancyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -162,43 +162,43 @@ const AdminAnalytics = () => {
 
         {/* Recent Bookings Table */}
         {analytics.recentBookings && analytics.recentBookings.length > 0 && (
-          <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
-            <h2 className="text-xl font-bold mb-4 text-gray-900">Recent Bookings</h2>
+          <div className="bg-[#334155] rounded-lg p-6 border border-[#475569]">
+            <h2 className="text-xl font-bold mb-4 text-white">Recent Bookings</h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-[#475569]">
+                <thead className="bg-[#334155]">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       User
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       Event
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       Seats
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       Amount
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">
                       Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-white/10">
                   {analytics.recentBookings.map((booking) => (
-                    <tr key={booking.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <tr key={booking.id} className="hover:bg-[#334155]">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {booking.user.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {booking.event.title}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">{booking.seats}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{booking.seats}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
                         ₹{booking.amount.toLocaleString('en-IN')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                         {new Date(booking.created_at).toLocaleDateString()}
                       </td>
                     </tr>
