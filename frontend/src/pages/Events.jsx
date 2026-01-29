@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CalendarIcon, MapPinIcon, MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline'
 import Pagination from '../components/Pagination'
+import { motion } from 'framer-motion'
 
 const Events = () => {
   const [events, setEvents] = useState([])
@@ -30,7 +31,7 @@ const Events = () => {
       if (location) params.append('location', location)
       if (date) params.append('date', date)
       params.append('page', currentPage)
-      params.append('limit', 12)
+      params.append('limit', 10) // Converted to list view, fewer items per page fits better
 
       const response = await fetch(`${API_URL}/api/events?${params}`)
       const data = await response.json()
@@ -57,201 +58,193 @@ const Events = () => {
     setDate('')
   }
 
+  // Helper date formatter
+  const formatDateParts = (dateString) => {
+    const d = new Date(dateString)
+    return {
+      month: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+      day: d.getDate(),
+      time: d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      weekday: d.toLocaleDateString('en-US', { weekday: 'long' })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - SkillBox Style */}
-      <div className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-5xl md:text-6xl font-black mb-3">All Events</h1>
-          <p className="text-xl text-gray-300">Discover extraordinary experiences across India</p>
+      {/* Header - Simple & Clean */}
+      <div className="bg-[#1a1410] text-white pt-32 pb-20 px-6 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-end">
+          <div className="mb-8 md:mb-0">
+            <p className="text-xs font-bold tracking-[0.2em] text-[#a69d96] uppercase mb-4">
+              • Discover •
+            </p>
+            <h1 className="text-5xl md:text-7xl font-serif leading-tight">All Events</h1>
+          </div>
+          <div className="max-w-md">
+            <p className="text-[#a69d96] font-light leading-relaxed text-right md:text-left">
+              Curated experiences for the discerning audience.<br />Find your next unforgettable night.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Filters - Modern Style */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-10 border border-gray-200">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-900 flex items-center">
-              <FunnelIcon className="h-6 w-6 mr-3 text-gray-600" />
-              Search & Filters
-            </h2>
-            {(search || location || date) && (
-              <button
-                onClick={clearFilters}
-                className="text-sm text-gray-700 hover:text-gray-900 font-semibold"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-navy-400" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-gray-900 placeholder-gray-400"
-              />
+      <div className="max-w-7xl mx-auto px-6 py-16">
+
+        {/* Filters - Clean Bar */}
+        <div className="border-b border-gray-100 pb-12 mb-16">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="flex items-center space-x-2 text-[#1a1410]">
+              <FunnelIcon className="h-5 w-5 text-[#b45309]" />
+              <span className="font-serif font-bold text-lg">Filter</span>
             </div>
-            <div className="relative">
-              <MapPinIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-navy-400" />
-              <input
-                type="text"
-                placeholder="City or State"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-gray-900 placeholder-gray-400"
-              />
-            </div>
-            <div className="relative">
-              <CalendarIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-navy-400" />
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 border border-luxury-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
-              />
+
+            <div className="flex flex-col md:flex-row gap-6 w-full lg:w-auto flex-1 lg:justify-end">
+              <div className="relative group min-w-[200px]">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full bg-transparent border-b border-gray-200 py-2 pl-0 pr-8 text-[#1a1410] placeholder-gray-300 focus:border-[#1a1410] focus:ring-0 transition-colors font-serif"
+                />
+                <MagnifyingGlassIcon className="absolute right-0 top-2 h-5 w-5 text-gray-300 group-focus-within:text-[#b45309] transition-colors" />
+              </div>
+              <div className="relative group min-w-[200px]">
+                <input
+                  type="text"
+                  placeholder="Location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="w-full bg-transparent border-b border-gray-200 py-2 pl-0 pr-8 text-[#1a1410] placeholder-gray-300 focus:border-[#1a1410] focus:ring-0 transition-colors font-serif"
+                />
+                <MapPinIcon className="absolute right-0 top-2 h-5 w-5 text-gray-300 group-focus-within:text-[#b45309] transition-colors" />
+              </div>
+              <div className="relative group min-w-[150px]">
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full bg-transparent border-b border-gray-200 py-2 pl-0 pr-8 text-[#1a1410] placeholder-gray-300 focus:border-[#1a1410] focus:ring-0 transition-colors font-serif uppercase text-sm"
+                />
+              </div>
+              {(search || location || date) && (
+                <button onClick={clearFilters} className="text-xs uppercase font-bold tracking-widest text-red-400 hover:text-red-600 transition-colors">
+                  Reset
+                </button>
+              )}
             </div>
           </div>
-          {(search || location || date) && (
-            <div className="mt-6 flex flex-wrap gap-3">
-              {search && (
-                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-800 font-semibold border border-gray-300">
-                  Search: {search}
-                </span>
-              )}
-              {location && (
-                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-800 font-semibold border border-gray-300">
-                  Location: {location}
-                </span>
-              )}
-              {date && (
-                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-800 font-semibold border border-gray-300">
-                  Date: {new Date(date).toLocaleDateString('en-IN')}
-                </span>
-              )}
-            </div>
-          )}
         </div>
 
-        {/* Results Count */}
+        {/* Results Info */}
         {!loading && pagination && (
-          <div className="mb-8 flex items-center justify-between">
-            <p className="text-lg text-gray-700 font-semibold">
-              Showing {((currentPage - 1) * 12) + 1}-{Math.min(currentPage * 12, pagination.totalItems)} of {pagination.totalItems} {pagination.totalItems === 1 ? 'event' : 'events'}
-            </p>
+          <div className="mb-12 flex justify-between items-end">
+            <h2 className="text-sm font-bold uppercase tracking-[0.15em] text-gray-400">
+              Upcoming Events
+            </h2>
+            <span className="text-xs font-bold text-[#b45309]">
+              {pagination.totalItems} Results
+            </span>
           </div>
         )}
 
-        {/* Events Grid */}
+        {/* Events List View */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-luxury-200">
-                <div className="h-64 skeleton-luxury"></div>
-                <div className="p-6 space-y-4">
-                  <div className="h-6 skeleton-luxury rounded"></div>
-                  <div className="h-4 skeleton-luxury rounded w-2/3"></div>
-                </div>
-              </div>
+          <div className="space-y-12">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-48 bg-gray-50 animate-pulse rounded-sm" />
             ))}
           </div>
         ) : events.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-lg shadow-lg border border-gray-200">
-            <div className="max-w-md mx-auto">
-              <MagnifyingGlassIcon className="h-20 w-20 text-gray-300 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">No events found</h3>
-              <p className="text-gray-600 mb-8 text-lg">
-                Try adjusting your search filters or check back later for new events.
-              </p>
-              <button
-                onClick={clearFilters}
-                className="bg-gray-900 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-              >
-                Clear Filters
-              </button>
-            </div>
+          <div className="text-center py-32 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+            <h3 className="text-3xl font-serif text-[#1a1410] mb-4">No events found</h3>
+            <p className="text-gray-500 mb-8 font-light">
+              Try adjusting your search criteria to find what you're looking for.
+            </p>
+            <button
+              onClick={clearFilters}
+              className="text-[#b45309] border-b border-[#b45309] pb-0.5 font-bold uppercase tracking-widest text-xs hover:text-[#1a1410] hover:border-[#1a1410] transition-colors"
+            >
+              Clear Filters
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event) => (
-              <div
-                key={event.id}
-                className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
-              >
-                <div className="relative h-64 overflow-hidden bg-gradient-to-br from-navy-800 to-navy-900">
-                  {event.image_url ? (
-                    <img
-                      src={event.image_url}
-                      alt={event.title || 'Event image'}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                        e.target.parentElement.classList.add('bg-gradient-to-br', 'from-navy-800', 'to-navy-900')
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-navy-800 to-navy-900 flex items-center justify-center">
-                      <span className="text-white/50 text-sm">No Image</span>
-                    </div>
-                  )}
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-300">
-                    <span className="text-sm font-bold text-gray-900">
-                      ₹{event.price.toLocaleString('en-IN')}
-                    </span>
+          <div className="space-y-12">
+            {events.map((event, index) => {
+              const { month, day, time, weekday } = formatDateParts(event.date)
+              return (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.05 }}
+                  className="group flex flex-col md:flex-row items-stretch border-b border-gray-100 pb-12 hover:border-[#b45309]/30 transition-colors cursor-pointer"
+                >
+                  {/* Left: Date Column */}
+                  <div className="md:w-32 flex-shrink-0 flex flex-col pt-2 md:pr-8 md:border-r border-gray-100 mb-4 md:mb-0">
+                    <span className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">{month}</span>
+                    <span className="text-5xl font-serif text-[#1a1410] leading-none mb-2 group-hover:scale-110 origin-left transition-transform duration-500">{day}</span>
+                    <span className="text-xs font-bold text-[#b45309] uppercase tracking-wide">{weekday}</span>
                   </div>
-                  {event.remaining_seats < 20 && event.remaining_seats > 0 && (
-                    <div className="absolute top-4 left-4 bg-burgundy-600 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                      Only {event.remaining_seats} left!
+
+                  {/* Middle: Info */}
+                  <div className="flex-grow flex flex-col justify-center px-0 md:px-8 py-2">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-[10px] font-bold text-[#b45309] uppercase tracking-[0.2em]">
+                        {event.category || 'THEATRE'}
+                      </span>
+                      <span className="w-8 h-[1px] bg-gray-200"></span>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center">
+                        {time}
+                      </span>
                     </div>
-                  )}
-                  {event.remaining_seats <= 0 && (
-                    <div className="absolute top-4 left-4 bg-navy-800 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
-                      Sold Out
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-gray-700 transition-colors">
-                    {event.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2 min-h-[40px] leading-relaxed">
-                    {event.description}
-                  </p>
-                  <div className="space-y-2 mb-6 pb-6 border-b border-gray-200">
-                    <div className="flex items-center text-gray-600 text-sm">
-                      <CalendarIcon className="h-4 w-4 mr-2 text-gray-500" />
-                      <span>{new Date(event.date).toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                      <span className="mx-2">•</span>
-                      <span>{new Date(event.date).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600 text-sm">
-                      <MapPinIcon className="h-4 w-4 mr-2 text-gray-500" />
-                      <span className="line-clamp-1">{event.location}</span>
+
+                    <h3 className="text-3xl md:text-3xl font-serif text-[#1a1410] mb-3 group-hover:text-[#b45309] transition-colors leading-tight">
+                      {event.title}
+                    </h3>
+
+                    <p className="text-gray-500 text-sm mb-6 max-w-xl font-light line-clamp-2">
+                      {event.description}
+                    </p>
+
+                    <div className="flex items-center gap-6 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                      <Link to={`/events/${event.id}`} className="text-xs font-bold text-[#1a1410] uppercase tracking-widest border-b-2 border-[#1a1410] pb-1 hover:text-[#b45309] hover:border-[#b45309] transition-colors">
+                        Get Tickets
+                      </Link>
+                      <span className="text-sm font-bold text-gray-400">
+                        Starting at <span className="text-[#1a1410]">₹{event.price}</span>
+                      </span>
                     </div>
                   </div>
-                  <Link
-                    to={`/events/${event.id}`}
-                    className="bg-gray-900 text-white text-center py-3 rounded-lg font-semibold block hover:bg-gray-800 transition-colors"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              </div>
-            ))}
+
+                  {/* Right: Image Preview (Ticket Stub Shape) */}
+                  <div className="hidden md:block w-[300px] h-[160px] relative flex-shrink-0 ml-8 self-center perspective-1000">
+                    <div className="w-full h-full relative overflow-hidden ticket-mask bg-gray-100 transform group-hover:rotate-y-12 transition-transform duration-500">
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                  </div>
+
+                </motion.div>
+              )
+            })}
           </div>
         )}
 
         {/* Pagination */}
         {!loading && pagination && pagination.totalPages > 1 && (
-          <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
-          />
+          <div className="mt-20 border-t border-gray-100 pt-12">
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         )}
       </div>
     </div>

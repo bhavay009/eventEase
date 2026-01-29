@@ -15,13 +15,17 @@ app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
       'http://localhost:5173',
+      'http://localhost:5175', // Vite dev server (falls back when 5173/5174 busy)
       'http://localhost:3000',
       /https:\/\/.*\.vercel\.app$/, // Vercel frontend
       /https:\/\/.*\.onrender\.com$/ // Render backend (if needed)
     ];
-    if (!origin || allowedOrigins.some(allowed => 
-      typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
-    )) {
+    if (
+      !origin ||
+      allowedOrigins.some((allowed) =>
+        typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
+      )
+    ) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

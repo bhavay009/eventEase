@@ -80,34 +80,31 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1a1410]"></div>
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - SkillBox Style */}
-      <div className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-5xl md:text-6xl font-black mb-3">
-                {isOrganizer ? 'Organizer Dashboard' : 'Welcome Back, ' + user?.name}
-              </h1>
-              <p className="text-xl text-gray-300">
-                {isOrganizer 
-                  ? 'Manage your events and track your success'
-                  : 'Discover your next amazing event experience'
-                }
+      {/* Header - Matches new Theme */}
+      <div className="bg-[#1a1410] text-white pt-28 pb-16 px-6 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto z-10 relative">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="text-center md:text-left mb-6 md:mb-0">
+              <p className="text-xs font-bold tracking-[0.2em] text-[#a69d96] uppercase mb-2">
+                • {isOrganizer ? 'Organizer Portal' : 'My Account'} •
               </p>
+              <h1 className="text-4xl md:text-5xl font-serif leading-tight">
+                {isOrganizer ? 'Organizer Dashboard' : `Welcome, ${user?.name?.split(' ')[0]}`}
+              </h1>
             </div>
             {isOrganizer && (
               <Link
                 to="/admin/events"
-                className="hidden md:flex items-center space-x-2 bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-all"
+                className="flex items-center space-x-2 bg-[#b45309] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest hover:bg-[#8e3a00] transition-colors"
               >
-                <PlusIcon className="h-5 w-5" />
+                <PlusIcon className="h-4 w-4" />
                 <span>Create Event</span>
               </Link>
             )}
@@ -115,112 +112,68 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {isOrganizer ? (
           // Organizer Dashboard
           <div>
-            {/* Stats Cards - Modern Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-all">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <TicketIcon className="h-6 w-6 text-gray-700" />
-                  </div>
-                  <span className="text-2xl">🎪</span>
+            {/* Stats Cards - Minimalist Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+              {[
+                { icon: TicketIcon, label: 'Total Events', value: stats?.totalEvents, symbol: '' },
+                { icon: UsersIcon, label: 'Total Bookings', value: stats?.totalBookings, symbol: '' },
+                { icon: UsersIcon, label: 'Total Users', value: stats?.totalUsers, symbol: '' },
+                { icon: CurrencyRupeeIcon, label: 'Total Revenue', value: stats?.totalRevenue?.toLocaleString('en-IN'), symbol: '₹' }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-gray-50 p-8 border border-gray-100 hover:border-[#b45309] transition-colors group">
+                  <item.icon className="h-8 w-8 text-[#b45309] mb-4 group-hover:scale-110 transition-transform" />
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">{item.label}</h3>
+                  <p className="text-3xl font-serif text-[#1a1410]">{item.symbol}{item.value || 0}</p>
                 </div>
-                <h3 className="text-gray-500 text-sm font-semibold mb-1">Total Events</h3>
-                <p className="text-3xl font-bold text-gray-900">{stats?.totalEvents || 0}</p>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-all">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <UsersIcon className="h-6 w-6 text-gray-700" />
-                  </div>
-                  <span className="text-2xl">📊</span>
-                </div>
-                <h3 className="text-gray-500 text-sm font-semibold mb-1">Total Bookings</h3>
-                <p className="text-3xl font-bold text-gray-900">{stats?.totalBookings || 0}</p>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-all">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <UsersIcon className="h-6 w-6 text-gray-700" />
-                  </div>
-                  <span className="text-2xl">👥</span>
-                </div>
-                <h3 className="text-gray-500 text-sm font-semibold mb-1">Total Users</h3>
-                <p className="text-3xl font-bold text-gray-900">{stats?.totalUsers || 0}</p>
-              </div>
-
-              <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200 transform hover:scale-105 transition-all">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <CurrencyRupeeIcon className="h-6 w-6 text-gray-700" />
-                  </div>
-                  <span className="text-2xl">💰</span>
-                </div>
-                <h3 className="text-gray-500 text-sm font-semibold mb-1">Total Revenue</h3>
-                <p className="text-3xl font-bold text-gray-900">
-                  ₹{stats?.totalRevenue?.toLocaleString('en-IN') || '0'}
-                </p>
-              </div>
+              ))}
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              <Link
-                to="/admin/events"
-                className="bg-gray-900 text-white p-8 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
-              >
-                <PlusIcon className="h-10 w-10 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Create Event</h3>
-                <p className="text-gray-300">Add a new event to your portfolio</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+              <Link to="/admin/events" className="group block p-8 bg-white border border-gray-200 hover:border-[#1a1410] transition-all">
+                <PlusIcon className="h-8 w-8 text-[#1a1410] mb-4 group-hover:text-[#b45309] transition-colors" />
+                <h3 className="text-xl font-serif text-[#1a1410] mb-2">Create New Event</h3>
+                <p className="text-sm text-gray-500">Launch a new experience for your audience.</p>
               </Link>
-
-              <Link
-                to="/admin/events"
-                className="bg-gray-800 text-white p-8 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
-              >
-                <TicketIcon className="h-10 w-10 mb-4" />
-                <h3 className="text-xl font-bold mb-2">Manage Events</h3>
-                <p className="text-gray-300">Edit or delete your events</p>
+              <Link to="/admin/events" className="group block p-8 bg-white border border-gray-200 hover:border-[#1a1410] transition-all">
+                <TicketIcon className="h-8 w-8 text-[#1a1410] mb-4 group-hover:text-[#b45309] transition-colors" />
+                <h3 className="text-xl font-serif text-[#1a1410] mb-2">Manage Events</h3>
+                <p className="text-sm text-gray-500">Edit details and monitor ticket sales.</p>
               </Link>
-
-              <Link
-                to="/admin/analytics"
-                className="bg-gray-700 text-white p-8 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
-              >
-                <ChartBarIcon className="h-10 w-10 mb-4" />
-                <h3 className="text-xl font-bold mb-2">View Analytics</h3>
-                <p className="text-gray-300">Track your event performance</p>
+              <Link to="/admin/analytics" className="group block p-8 bg-white border border-gray-200 hover:border-[#1a1410] transition-all">
+                <ChartBarIcon className="h-8 w-8 text-[#1a1410] mb-4 group-hover:text-[#b45309] transition-colors" />
+                <h3 className="text-xl font-serif text-[#1a1410] mb-2">View Analytics</h3>
+                <p className="text-sm text-gray-500">Deep dive into your performance metrics.</p>
               </Link>
             </div>
 
-            {/* Recent Events */}
-            <div className="bg-white rounded-lg shadow-lg p-8 mb-8 border border-gray-200">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Your Events</h2>
-                <Link to="/admin/events" className="text-gray-700 hover:text-gray-900 font-semibold">
-                  View All →
+            {/* Recent Events List */}
+            <div className="mb-12">
+              <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                <h2 className="text-2xl font-serif text-[#1a1410]">Recent Events</h2>
+                <Link to="/admin/events" className="text-xs font-bold uppercase tracking-widest text-[#b45309] hover:text-[#1a1410]">
+                  View All
                 </Link>
               </div>
-              <div className="space-y-4">
-                {events.length === 0 ? (
-                  <div className="text-center py-12">
-                    <TicketIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 mb-4">No events yet</p>
-                    <Link to="/admin/events" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold inline-block hover:bg-gray-800 transition-colors">
-                      Create Your First Event
-                    </Link>
-                  </div>
-                ) : (
-                  events.map((event) => (
-                    <div key={event.id} className="flex items-center justify-between p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200">
-                      <div className="flex-1">
-                        <h3 className="font-bold text-gray-900 mb-1">{event.title}</h3>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+
+              {events.length === 0 ? (
+                <div className="text-center py-12 bg-gray-50">
+                  <p className="text-gray-500 mb-4">You haven't created any events yet.</p>
+                  <Link to="/admin/events" className="text-xs font-bold uppercase tracking-widest text-[#1a1410] border-b border-[#1a1410]">
+                    Get Started
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {events.map((event) => (
+                    <div key={event.id} className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-white border border-gray-100 hover:border-gray-300 transition-colors">
+                      <div>
+                        <h3 className="font-serif text-xl text-[#1a1410] mb-1">{event.title}</h3>
+                        <div className="flex items-center space-x-4 text-xs font-bold uppercase tracking-wide text-gray-400">
                           <span className="flex items-center">
                             <CalendarIcon className="h-4 w-4 mr-1" />
                             {new Date(event.date).toLocaleDateString('en-IN')}
@@ -231,136 +184,108 @@ const Dashboard = () => {
                           </span>
                         </div>
                       </div>
-                      <Link
-                        to={`/events/${event.id}`}
-                        className="text-gray-700 hover:text-gray-900 font-semibold"
-                      >
-                        View →
+                      <Link to={`/events/${event.id}`} className="mt-4 md:mt-0 text-xs font-bold uppercase tracking-widest text-[#1a1410] hover:text-[#b45309]">
+                        View Details →
                       </Link>
                     </div>
-                  ))
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : (
           // Customer Dashboard
           <div>
-            {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <div className="bg-gray-900 text-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <TicketIcon className="h-12 w-12 opacity-80" />
-                  <span className="text-5xl">🎫</span>
+            {/* Quick Stats - Minimalist */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+              <div className="p-8 bg-[#1a1410] text-white relative overflow-hidden group">
+                <div className="absolute right-0 top-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+                  <TicketIcon className="h-32 w-32" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Upcoming Events</h3>
-                <p className="text-4xl font-bold">{events.length}</p>
-              </div>
-
-              <div className="bg-gray-800 text-white rounded-lg p-8 shadow-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <CalendarIcon className="h-12 w-12 opacity-80" />
-                  <span className="text-5xl">📅</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-2">My Bookings</h3>
-                <p className="text-4xl font-bold">{bookings.length}</p>
-              </div>
-            </div>
-
-            {/* Upcoming Events */}
-            <div className="bg-white rounded-lg shadow-lg p-8 mb-8 border border-gray-200">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Upcoming Events</h2>
-                <Link to="/events" className="text-gray-700 hover:text-gray-900 font-semibold">
-                  Browse All →
+                <h3 className="text-xs font-bold uppercase tracking-widest text-[#a69d96] mb-2">Upcoming Events</h3>
+                <p className="text-5xl font-serif mb-6">{events.length}</p>
+                <Link to="/events" className="text-xs font-bold uppercase tracking-widest border-b border-white/30 pb-1 hover:border-white transition-colors">
+                  Find More Events
                 </Link>
               </div>
-              {events.length === 0 ? (
-                <div className="text-center py-12">
-                  <CalendarIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">No upcoming events</p>
-                  <Link to="/events" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold inline-block hover:bg-gray-800 transition-colors">
-                    Discover Events
-                  </Link>
+
+              <div className="p-8 bg-[#b45309] text-white relative overflow-hidden group">
+                <div className="absolute right-0 top-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+                  <CalendarIcon className="h-32 w-32" />
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {events.map((event) => (
-                    <Link
-                      key={event.id}
-                      to={`/events/${event.id}`}
-                      className="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-all border border-gray-200 hover:shadow-lg"
-                    >
-                      <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-                      <div className="flex items-center text-sm text-gray-600 mb-3">
-                        <CalendarIcon className="h-4 w-4 mr-1" />
-                        {new Date(event.date).toLocaleDateString('en-IN')}
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600 mb-4">
-                        <MapPinIcon className="h-4 w-4 mr-1" />
-                        <span className="line-clamp-1">{event.location}</span>
-                      </div>
-                      <div className="text-gray-900 font-bold">₹{event.price.toLocaleString('en-IN')}</div>
-                    </Link>
-                  ))}
-                </div>
-              )}
+                <h3 className="text-xs font-bold uppercase tracking-widest text-white/80 mb-2">My Bookings</h3>
+                <p className="text-5xl font-serif mb-6">{bookings.length}</p>
+                <span className="text-xs font-bold uppercase tracking-widest opacity-80">
+                  Confirmed Tickets
+                </span>
+              </div>
             </div>
 
-            {/* My Bookings */}
-            <div className="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">My Bookings</h2>
-              {bookings.length === 0 ? (
-                <div className="text-center py-12">
-                  <TicketIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">No bookings yet</p>
-                  <Link to="/events" className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold inline-block hover:bg-gray-800 transition-colors">
-                    Book Your First Event
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              {/* Left Column: Upcoming Recommended */}
+              <div className="lg:col-span-2">
+                <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                  <h2 className="text-2xl font-serif text-[#1a1410]">Recommended For You</h2>
+                  <Link to="/events" className="text-xs font-bold uppercase tracking-widest text-[#b45309] hover:text-[#1a1410]">
+                    Browse All
                   </Link>
                 </div>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase">Event</th>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase">Date</th>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase">Seats</th>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase">Amount</th>
-                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {bookings.map((booking) => (
-                        <tr key={booking.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {booking.event.title}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {new Date(booking.event.date).toLocaleDateString('en-IN')}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{booking.seats}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                            ₹{booking.amount.toLocaleString('en-IN')}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span
-                              className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                booking.payment_status === 'paid'
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-yellow-100 text-yellow-800'
-                              }`}
-                            >
-                              {booking.payment_status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+
+                {events.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50">
+                    <p className="text-gray-500 mb-4">No events found matching your interests.</p>
+                    <Link to="/events" className="text-xs font-bold uppercase tracking-widest text-[#1a1410] border-b border-[#1a1410]">
+                      Explore Events
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {events.map((event) => (
+                      <Link key={event.id} to={`/events/${event.id}`} className="group block bg-white border border-gray-100 hover:border-[#1a1410] transition-colors">
+                        <div className="aspect-video bg-gray-200 overflow-hidden">
+                          <img src={event.image_url} alt={event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                        </div>
+                        <div className="p-6">
+                          <h3 className="text-lg font-serif text-[#1a1410] mb-2 line-clamp-1 group-hover:text-[#b45309] transition-colors">{event.title}</h3>
+                          <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-4">
+                            {new Date(event.date).toLocaleDateString('en-IN')} • {event.location}
+                          </p>
+                          <span className="text-sm font-bold text-[#1a1410]">₹{event.price.toLocaleString('en-IN')}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column: Bookings List */}
+              <div className="lg:col-span-1">
+                <h2 className="text-2xl font-serif text-[#1a1410] mb-8 pb-4 border-b border-gray-100">My Bookings</h2>
+                {bookings.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50">
+                    <p className="text-gray-500 text-sm mb-4">You have no active bookings.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {bookings.map((booking) => (
+                      <div key={booking.id} className="bg-white border border-gray-100 p-6 hover:shadow-lg transition-shadow">
+                        <h4 className="font-serif text-lg text-[#1a1410] mb-1">{booking.event.title}</h4>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">
+                          {new Date(booking.event.date).toLocaleDateString('en-IN')}
+                        </p>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-600">{booking.seats} Seats</span>
+                          <span className={`px-2 py-1 text-[10px] uppercase font-bold tracking-widest ${booking.payment_status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {booking.payment_status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+
           </div>
         )}
       </div>

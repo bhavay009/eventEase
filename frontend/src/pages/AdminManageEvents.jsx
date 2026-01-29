@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Pagination from '../components/Pagination'
+import { PlusIcon, PencilIcon, TrashIcon, CalendarIcon, MapPinIcon } from '@heroicons/react/24/outline'
 
 const AdminManageEvents = () => {
   const [events, setEvents] = useState([])
@@ -94,8 +95,6 @@ const AdminManageEvents = () => {
         image_url: formData.image_url?.trim() || null
       }
 
-      console.log('Submitting event:', requestBody)
-
       const response = await fetch(url, {
         method,
         headers: {
@@ -106,7 +105,6 @@ const AdminManageEvents = () => {
       })
 
       const data = await response.json()
-      console.log('Response status:', response.status, 'Response data:', data)
 
       if (response.ok && data.success) {
         setShowModal(false)
@@ -120,7 +118,7 @@ const AdminManageEvents = () => {
           total_seats: '',
           image_url: ''
         })
-        // Refresh events - if we're on a page that might be empty after deletion, go to previous page
+        // Refresh events
         if (events.length === 1 && currentPage > 1) {
           setCurrentPage(currentPage - 1)
         } else {
@@ -128,16 +126,14 @@ const AdminManageEvents = () => {
         }
         alert(editingEvent ? 'Event updated successfully!' : 'Event created successfully!')
       } else {
-        // Show detailed error message
-        const errorMsg = data.errors 
+        const errorMsg = data.errors
           ? data.errors.map(e => e.msg || e.message).join(', ')
           : data.message || `Operation failed (Status: ${response.status})`
         alert(`Error: ${errorMsg}`)
-        console.error('Create/Update event error:', data)
       }
     } catch (error) {
       console.error('Connection error:', error)
-      alert(`Connection error: ${error.message || 'Unable to connect to server. Please check if the backend server is running.'}`)
+      alert(`Connection error: ${error.message}`)
     } finally {
       setSubmitting(false)
     }
@@ -170,7 +166,6 @@ const AdminManageEvents = () => {
       const data = await response.json()
 
       if (data.success) {
-        // Refresh events - if we're on a page that might be empty after deletion, go to previous page
         if (events.length === 1 && currentPage > 1) {
           setCurrentPage(currentPage - 1)
         } else {
@@ -185,13 +180,18 @@ const AdminManageEvents = () => {
   }
 
   return (
-    <div className="min-h-screen bg-luxury-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-white font-sans text-[#1a1410]">
+
+      {/* Header */}
+      <div className="bg-[#1a1410] text-white pt-24 pb-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div>
-            <h1 className="text-4xl font-luxury font-bold text-navy-900">Manage Events</h1>
+            <p className="text-xs font-bold tracking-[0.2em] text-[#a69d96] uppercase mb-2">
+              • Organizer Portal •
+            </p>
+            <h1 className="text-4xl font-serif mb-2">Manage Events</h1>
             {pagination && (
-              <p className="text-navy-600 mt-2">
+              <p className="text-[#a69d96] text-sm">
                 {pagination.totalItems} {pagination.totalItems === 1 ? 'event' : 'events'} total
               </p>
             )}
@@ -210,98 +210,85 @@ const AdminManageEvents = () => {
               })
               setShowModal(true)
             }}
-            className="btn-luxury text-white px-6 py-3 rounded-xl font-semibold"
+            className="mt-6 md:mt-0 flex items-center bg-[#b45309] text-white px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-[#8e3a00] transition-colors"
           >
+            <PlusIcon className="h-4 w-4 mr-2" />
             Create Event
           </button>
         </div>
+      </div>
 
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600"></div>
+          <div className="flex justify-center py-24">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b45309]"></div>
           </div>
         ) : events.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-luxury-200">
-            <p className="text-navy-600 text-lg mb-6">No events yet. Create your first event!</p>
+          <div className="text-center py-24 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+            <CalendarIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-serif text-[#1a1410] mb-2">No events yet</h3>
+            <p className="text-gray-500 mb-6">Create your first event to get started.</p>
             <button
               onClick={() => {
                 setEditingEvent(null)
-                setFormData({
-                  title: '',
-                  description: '',
-                  date: '',
-                  location: '',
-                  price: '',
-                  total_seats: '',
-                  image_url: ''
-                })
                 setShowModal(true)
               }}
-              className="btn-luxury text-white px-6 py-3 rounded-xl font-semibold"
+              className="text-[#b45309] font-bold uppercase tracking-widest text-xs border-b border-[#b45309] pb-0.5 hover:text-[#1a1410] hover:border-[#1a1410] transition-colors"
             >
-              Create Event
+              Create Event Now
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-luxury-200">
-            <table className="min-w-full divide-y divide-luxury-200">
-              <thead className="bg-luxury-50">
+          <div className="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-lg">
+            <table className="min-w-full divide-y divide-gray-100">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Seats
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-navy-900 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Price</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Seats</th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-luxury-200">
+              <tbody className="divide-y divide-gray-100">
                 {events.map((event) => (
-                  <tr key={event.id} className="hover:bg-luxury-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-navy-900">
-                      {event.title}
+                  <tr key={event.id} className="hover:bg-gray-50 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-serif font-bold text-[#1a1410]">{event.title}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-navy-600">
-                      {new Date(event.date).toLocaleDateString('en-IN', { 
-                        weekday: 'short', 
-                        month: 'short', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                      })}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(event.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-navy-600">
-                      {event.location}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <MapPinIcon className="h-4 w-4 mr-1 text-gray-400" />
+                        {event.location}
+                      </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gold-700">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#b45309]">
                       ₹{event.price.toLocaleString('en-IN')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-navy-600">
-                      {event.remaining_seats || 0}/{event.total_seats}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <span className={!event.remaining_seats ? 'text-red-500 font-bold' : ''}>
+                        {event.remaining_seats || 0}
+                      </span>
+                      <span className="text-gray-400"> / {event.total_seats}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEdit(event)}
-                        className="text-gold-700 hover:text-gold-800 font-semibold elegant-underline"
+                        className="text-gray-400 hover:text-[#1a1410] mr-4 transition-colors"
+                        title="Edit"
                       >
-                        Edit
+                        <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(event.id)}
-                        className="text-burgundy-700 hover:text-burgundy-800 font-semibold"
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        title="Delete"
                       >
-                        Delete
+                        <TrashIcon className="h-5 w-5" />
                       </button>
                     </td>
                   </tr>
@@ -323,13 +310,13 @@ const AdminManageEvents = () => {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Modal - Clean Light Theme */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 border border-luxury-200">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-luxury font-bold text-navy-900">
-                {editingEvent ? 'Edit Event' : 'Create Event'}
+        <div className="fixed inset-0 bg-[#1a1410]/50 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="relative bg-white w-full max-w-2xl p-8 shadow-2xl animate-fade-in">
+            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+              <h3 className="text-2xl font-serif text-[#1a1410]">
+                {editingEvent ? 'Edit Event' : 'Create New Event'}
               </h3>
               <button
                 type="button"
@@ -337,109 +324,117 @@ const AdminManageEvents = () => {
                   setShowModal(false)
                   setEditingEvent(null)
                 }}
-                className="text-navy-600 hover:text-navy-900 text-2xl font-bold"
+                className="text-gray-400 hover:text-[#1a1410] text-3xl leading-none"
               >
                 ×
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-navy-900 mb-2">Title</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Title</label>
                 <input
                   type="text"
-                  placeholder="Event Title"
+                  placeholder="e.g. Summer Jazz Festival"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
+                  className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] placeholder-gray-300 font-serif text-lg transition-colors"
                   required
                 />
               </div>
+
               <div>
-                <label className="block text-sm font-semibold text-navy-900 mb-2">Description</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Description</label>
                 <textarea
-                  placeholder="Event Description"
+                  placeholder="Describe the event..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#1a1410] focus:ring-0 rounded-none text-[#1a1410] placeholder-gray-300 transition-colors text-sm"
                   rows="4"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-navy-900 mb-2">Date & Time</label>
-                <input
-                  type="datetime-local"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-navy-900 mb-2">Location</label>
-                <input
-                  type="text"
-                  placeholder="Event Location"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-navy-900 mb-2">Price (₹)</label>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Date & Time</label>
+                  <input
+                    type="datetime-local"
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] transition-colors"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Location</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Grand Theatre, Mumbai"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] placeholder-gray-300 transition-colors"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Price (₹)</label>
                   <input
                     type="number"
                     step="0.01"
                     placeholder="0.00"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
+                    className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] placeholder-gray-300 font-serif text-lg transition-colors"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-navy-900 mb-2">Total Seats</label>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Total Seats</label>
                   <input
                     type="number"
                     placeholder="100"
                     value={formData.total_seats}
                     onChange={(e) => setFormData({ ...formData, total_seats: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
+                    className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] placeholder-gray-300 font-serif text-lg transition-colors"
                     required
                   />
                 </div>
               </div>
+
               <div>
-                <label className="block text-sm font-semibold text-navy-900 mb-2">Image URL (optional)</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Image URL (Optional)</label>
                 <input
                   type="url"
                   placeholder="https://example.com/image.jpg"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-luxury-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 text-navy-900"
+                  className="w-full px-0 py-3 bg-transparent border-b border-gray-200 focus:border-[#1a1410] focus:ring-0 text-[#1a1410] placeholder-gray-300 transition-colors"
                 />
               </div>
-              <div className="flex justify-end space-x-4 pt-4">
+
+              <div className="flex justify-end space-x-4 pt-6 text-sm font-bold uppercase tracking-widest">
                 <button
                   type="button"
                   onClick={() => {
                     setShowModal(false)
                     setEditingEvent(null)
                   }}
-                  className="px-6 py-3 border-2 border-luxury-300 rounded-xl text-navy-900 font-semibold hover:bg-luxury-50 transition-colors"
+                  className="px-6 py-3 text-gray-400 hover:text-[#1a1410] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-luxury text-white px-6 py-3 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#1a1410] text-white px-8 py-3 hover:bg-[#b45309] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {submitting 
-                    ? (editingEvent ? 'Updating...' : 'Creating...') 
-                    : (editingEvent ? 'Update Event' : 'Create Event')
+                  {submitting
+                    ? (editingEvent ? 'Updating...' : 'Creating...')
+                    : (editingEvent ? 'Save Changes' : 'Create Event')
                   }
                 </button>
               </div>
@@ -452,4 +447,3 @@ const AdminManageEvents = () => {
 }
 
 export default AdminManageEvents
-

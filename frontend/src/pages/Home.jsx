@@ -1,14 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { CalendarIcon, MapPinIcon, MagnifyingGlassIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
-import { useAuth } from '../context/AuthContext'
+import { MapPinIcon, CalendarIcon, ClockIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Home = () => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const scrollContainerRef = useRef(null)
-  const { isAuthenticated, isOrganizer } = useAuth()
+  const [activeIndex, setActiveIndex] = useState(0)
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
@@ -19,7 +17,7 @@ const Home = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${API_URL}/api/events?limit=20`)
+      const response = await fetch(`${API_URL}/api/events?limit=8`)
       const data = await response.json()
 
       if (data.success) {
@@ -32,205 +30,286 @@ const Home = () => {
     }
   }
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' })
+  const getDateParts = (dateString) => {
+    const date = new Date(dateString)
+    return {
+      month: date.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+      day: date.getDate(),
+      time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
     }
   }
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' })
+  // Calculate Date Range for Hero Headline
+  const getEventDateRange = () => {
+    if (events.length === 0) return 'Coming Soon'
+
+    // Sort events by date to find min and max
+    const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date))
+    const firstEvent = new Date(sortedEvents[0].date)
+    const lastEvent = new Date(sortedEvents[sortedEvents.length - 1].date)
+
+    const format = (date) => {
+      // Add ordinal suffix (th, st, nd, rd)
+      const d = date.getDate()
+      const suffix = (d > 3 && d < 21) ? 'th' : (d % 10 === 1 ? 'st' : (d % 10 === 2 ? 'nd' : (d % 10 === 3 ? 'rd' : 'th')))
+      return `${date.toLocaleDateString('en-US', { month: 'long' })} ${d}${suffix}`
     }
+
+    if (firstEvent.toDateString() === lastEvent.toDateString()) {
+      return format(firstEvent)
+    }
+
+    return `${format(firstEvent)} – ${format(lastEvent)}`
   }
 
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (search.trim()) {
-      window.location.href = `/events?search=${encodeURIComponent(search)}`
-    }
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev === events.length - 1 ? 0 : prev + 1))
   }
+
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev === 0 ? events.length - 1 : prev - 1))
+  }
+
+  // Get index helper with wrap-around
+  const getIndex = (idx) => {
+    if (idx < 0) return events.length + idx
+    if (idx >= events.length) return idx - events.length
+    return idx
+  }
+
+  const featuredEvent = events[activeIndex]
+  const prevEvent = events[getIndex(activeIndex - 1)]
+  const nextEvent = events[getIndex(activeIndex + 1)]
 
   return (
-    <div className="min-h-screen">
-      <section className="relative w-full h-[70vh] overflow-hidden">
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          src="https://videos.pexels.com/video-files/7525996/7525996-sd_640_360_25fps.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-          <div className="text-white">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-4">
-              Experience Live Shows
-            </h1>
-            <p className="text-lg md:text-2xl text-gray-200 max-w-2xl mb-8">
-              Book premium concerts, comedy, theatre and immersive events near you.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <a href="#discover" className="px-8 py-4 btn-luxury btn-glow text-white font-bold">
-                Discover Shows
-              </a>
-              <form onSubmit={handleSearch} className="w-full sm:w-auto">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                  <input
-                    type="text"
-                    placeholder="Search events, artists or venues"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full sm:w-80 pl-12 pr-4 py-4 rounded-xl glass-dark focus:outline-none focus:ring-2 focus:ring-gold-500"
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
+    <div className="min-h-screen bg-white font-sans">
+
+      {/* 
+        HERO SECTION - Infinite Carousel
+      */}
+      <section className="relative bg-[#1a1410] text-white pt-24 pb-24 px-6 overflow-hidden min-h-[70vh] flex flex-col justify-center">
+        {/* Background Atmosphere */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/hero-bg-v2.png"
+            alt="Background Atmosphere"
+            className="w-full h-full object-cover opacity-70"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1a1410] via-transparent to-[#1a1410] opacity-70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a1410] via-[#1a1410]/20 to-[#1a1410] opacity-60" />
         </div>
-      </section>
-      <div className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {loading ? (
-            <div className="flex space-x-6 overflow-hidden">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex-shrink-0 w-80 h-96 glass-dark rounded-2xl animate-pulse"></div>
-              ))}
-            </div>
-          ) : events.length > 0 ? (
-            <div className="relative">
+
+        <div className="max-w-7xl mx-auto text-center relative z-10 translate-y-12">
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-xs font-bold tracking-[0.3em] text-[#a69d96] uppercase mb-6"
+          >
+            • The Event Ease Events •
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+            className="text-5xl md:text-7xl font-serif mb-24 leading-tight drop-shadow-2xl"
+          >
+            {getEventDateRange()}
+          </motion.h1>
+        </div>
+
+        {/* CAROUSEL CONTAINER */}
+        <div className="relative z-20 max-w-6xl mx-auto mt-8 h-[320px] flex items-center justify-center">
+
+          {events.length > 0 && (
+            <>
+              {/* Navigation Buttons - Absolute positioned for accessibility */}
               <button
-                onClick={scrollLeft}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 glass-dark rounded-full p-3 hover-glow transition-colors"
-                aria-label="Scroll left"
+                onClick={prevSlide}
+                className="absolute left-4 md:left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#1a1410] shadow-lg hover:scale-110 transition-transform z-40 cursor-pointer"
               >
-                <ChevronLeftIcon className="h-6 w-6 text-white" />
+                <ChevronLeftIcon className="w-5 h-5 font-bold" />
               </button>
-              <div
-                ref={scrollContainerRef}
-                className="flex space-x-6 overflow-x-auto scrollbar-hide pb-4 scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              <button
+                onClick={nextSlide}
+                className="absolute right-4 md:right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center text-[#1a1410] shadow-lg hover:scale-110 transition-transform z-40 cursor-pointer"
               >
-                {events.map((event) => (
-                  <Link
-                    key={event.id}
-                    to={`/events/${event.id}`}
-                    className="flex-shrink-0 w-80 group"
-                  >
-                    <div className="card-luxury overflow-hidden transition-all duration-300">
-                      <div className="relative h-96 overflow-hidden bg-gradient-to-br from-gray-900 to-black">
-                        {event.image_url ? (
-                          <img
-                            src={event.image_url}
-                            alt={event.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            loading="lazy"
-                            onError={(e) => {
-                              e.target.style.display = 'none'
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-white/50 text-sm">No Image</span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                        <div className="absolute top-4 right-4 glass-dark px-4 py-2 rounded-full">
-                          <span className="text-sm font-bold text-white">
-                            ₹{event.price.toLocaleString('en-IN')}
-                          </span>
+                <ChevronRightIcon className="w-5 h-5 font-bold" />
+              </button>
+
+              {/* PREVIOUS CARD (Left Peeking) */}
+              {prevEvent && events.length > 1 && (
+                <div className="absolute left-0 md:left-10 top-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[240px] opacity-40 scale-90 blur-[1px] hidden md:block select-none overflow-hidden rounded-lg">
+                  <div className="flex w-full h-full bg-white text-gray-800">
+                    <div className="flex-1 p-6 flex flex-col justify-center">
+                      <h2 className="text-xl font-serif">{prevEvent.title}</h2>
+                    </div>
+                    <div className="w-[200px] bg-black">
+                      <img src={prevEvent.image_url} className="w-full h-full object-cover opacity-50" />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* NEXT CARD (Right Peeking) */}
+              {nextEvent && events.length > 1 && (
+                <div className="absolute right-0 md:right-10 top-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[240px] opacity-40 scale-90 blur-[1px] hidden md:block select-none overflow-hidden rounded-lg">
+                  <div className="flex w-full h-full bg-white text-gray-800">
+                    <div className="flex-1 p-6 flex flex-col justify-center">
+                      <h2 className="text-xl font-serif">{nextEvent.title}</h2>
+                    </div>
+                    <div className="w-[200px] bg-black">
+                      <img src={nextEvent.image_url} className="w-full h-full object-cover opacity-50" />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* MAIN FEATURED CARD (Center) */}
+              <AnimatePresence mode='wait'>
+                <motion.div
+                  key={featuredEvent.id}
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative z-30 max-w-3xl w-full mx-auto"
+                >
+                  <div className="bg-white rounded-lg shadow-2xl flex flex-col md:flex-row overflow-hidden relative min-h-[280px]">
+
+                    {/* Left: Info Section */}
+                    <div className="flex-1 p-6 md:p-8 flex flex-col justify-center relative">
+                      <span className="text-[10px] font-bold text-[#b45309] uppercase tracking-[0.2em] mb-3">
+                        {featuredEvent.category || 'COMEDY'}
+                      </span>
+                      <h2 className="text-3xl md:text-3xl font-serif text-[#1e1e1e] mb-2 leading-tight">
+                        {featuredEvent.title}
+                      </h2>
+                      <p className="text-gray-400 text-xs font-medium uppercase tracking-wider mb-6">
+                        {featuredEvent.location?.split(',')[0]} • 2026 Tour
+                      </p>
+
+                      <div className="flex items-center space-x-6 mb-8 text-[#1e1e1e]">
+                        <div className="flex items-center space-x-2">
+                          <CalendarIcon className="w-4 h-4 text-[#b45309]" />
+                          <span className="text-sm font-bold">{getDateParts(featuredEvent.date).month} {getDateParts(featuredEvent.date).day}</span>
                         </div>
-                        {event.remaining_seats <= 0 && (
-                          <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
-                            SOLD OUT
-                          </div>
-                        )}
-                        {event.remaining_seats > 0 && event.remaining_seats < 20 && (
-                          <div className="absolute top-4 left-4 bg-orange-600 text-white px-3 py-1.5 rounded-full text-xs font-bold">
-                            Only {event.remaining_seats} left!
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-2xl font-bold mb-2 line-clamp-2">{event.title}</h3>
-                          <div className="flex items-center space-x-4 text-sm text-gray-200">
-                            <div className="flex items-center">
-                              <CalendarIcon className="h-4 w-4 mr-1" />
-                              <span>
-                                {new Date(event.date).toLocaleDateString('en-IN', {
-                                  day: 'numeric',
-                                  month: 'short',
-                                  year: 'numeric'
-                                })}
-                              </span>
-                            </div>
-                            <div className="flex items-center">
-                              <MapPinIcon className="h-4 w-4 mr-1" />
-                              <span className="line-clamp-1">{event.location.split(',')[0]}</span>
-                            </div>
-                          </div>
+                        <div className="flex items-center space-x-2">
+                          <ClockIcon className="w-4 h-4 text-[#b45309]" />
+                          <span className="text-sm font-bold">{getDateParts(featuredEvent.date).time}</span>
                         </div>
                       </div>
+
+                      <div className="flex items-center space-x-6">
+                        <Link
+                          to={`/events/${featuredEvent.id}`}
+                          className="bg-[#b45309] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-widest hover:bg-[#8e3a00] transition-colors shadow-md"
+                        >
+                          Get Tickets
+                        </Link>
+                        <Link to={`/events/${featuredEvent.id}`} className="text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-[#1e1e1e] border-b border-gray-200 pb-0.5 hover:border-black transition-all">
+                          View Details
+                        </Link>
+                      </div>
+
+                      {/* Serrated Border (Right Side of content) */}
+                      <div className="absolute right-0 top-4 bottom-4 w-[1px] border-r-2 border-dashed border-gray-200 hidden md:block" />
+
+                      {/* Top/Bottom Notches simulating perforation */}
+                      <div className="absolute -top-3 right-[-12px] w-6 h-6 bg-[#1a1410] rounded-full z-10 hidden md:block" />
+                      <div className="absolute -bottom-3 right-[-12px] w-6 h-6 bg-[#1a1410] rounded-full z-10 hidden md:block" />
                     </div>
-                  </Link>
-                ))}
-              </div>
-              <button
-                onClick={scrollRight}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 glass-dark rounded-full p-3 hover-glow transition-colors"
-                aria-label="Scroll right"
-              >
-                <ChevronRightIcon className="h-6 w-6 text-white" />
-              </button>
+
+                    {/* Right: Image Section */}
+                    <div className="md:w-[240px] bg-black relative">
+                      <img
+                        src={featuredEvent.image_url}
+                        alt={featuredEvent.title}
+                        className="w-full h-full object-cover opacity-90"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </div>
+
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </>
+          )}
+
+        </div>
+      </section>
+
+      {/* Featured Upcoming Events (White List) */}
+      <section className="max-w-5xl mx-auto px-6 py-16 relative z-20">
+
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-serif text-[#1e1e1e] mb-3">Featured Upcoming Events</h2>
+          <p className="text-gray-500 text-sm">Keep coming back to stay informed about the activities.</p>
+        </div>
+
+        <div className="space-y-12">
+          {loading ? (
+            <div className="animate-pulse space-y-8">
+              {[1, 2, 3].map(i => <div key={i} className="h-44 bg-gray-100 rounded-lg" />)}
             </div>
           ) : (
-            <div className="text-center py-16">
-              <p className="text-gray-300 text-lg">No events available at the moment.</p>
-            </div>
+            events.map((event, index) => {
+              const { month, day, time } = getDateParts(event.date)
+              return (
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="flex flex-col md:flex-row items-stretch group cursor-pointer"
+                >
+                  {/* Left: Date */}
+                  <div className="md:w-32 flex-shrink-0 flex flex-col items-center justify-start pt-4 border-r border-gray-100 md:pr-8 md:mr-8 mb-6 md:mb-0">
+                    <span className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">{month}</span>
+                    <span className="text-5xl font-serif text-[#1e1e1e] leading-none mb-2 group-hover:scale-110 transition-transform duration-300">{day}</span>
+                    <span className="text-xs font-bold text-gray-500">{time}</span>
+                  </div>
+
+                  {/* Center: Info */}
+                  <div className="flex-grow flex flex-col justify-center pb-6 md:pb-0">
+                    <span className="text-[10px] font-bold text-[#b45309] uppercase tracking-wider mb-2">
+                      {event.category || 'THEATRE'}
+                    </span>
+                    <h3 className="text-2xl font-serif text-[#1e1e1e] mb-2 group-hover:text-[#b45309] transition-colors">
+                      {event.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm mb-4">
+                      {event.location}
+                    </p>
+
+                    <div className="flex items-center space-x-6 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                      <Link to={`/events/${event.id}`} className="bg-[#1e1e1e] text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#b45309] transition-colors">
+                        Get Tickets
+                      </Link>
+                      <Link to={`/events/${event.id}`} className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-[#1e1e1e]">
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Right: Ticket Stub Image */}
+                  <div className="md:w-[320px] h-[160px] relative mt-6 md:mt-0 ml-0 md:ml-8 flex-shrink-0">
+                    <div className="w-full h-full relative overflow-hidden ticket-mask bg-black">
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })
           )}
         </div>
-      </div>
+      </section>
 
-      <div id="discover" className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-4">
-              Premium Events
-            </h2>
-            <p className="text-2xl md:text-3xl font-bold text-gray-200 mb-2">
-              Discover and book unforgettable experiences
-            </p>
-            <p className="text-xl text-gray-300 mb-8">
-              Make your events live in minutes
-            </p>
-            <div className="flex justify-center space-x-4">
-              <Link
-                to="/events"
-                className="px-8 py-4 btn-luxury text-white font-bold hover-glow"
-              >
-                View Events
-              </Link>
-              {isOrganizer && (
-                <Link
-                  to="/admin/events"
-                  className="px-8 py-4 btn-luxury text-white font-bold hover-glow"
-                >
-                  Create Event
-                </Link>
-              )}
-              {!isAuthenticated && (
-                <Link
-                  to="/signup"
-                  className="px-8 py-4 btn-luxury text-white font-bold btn-glow"
-                >
-                  Get Started
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

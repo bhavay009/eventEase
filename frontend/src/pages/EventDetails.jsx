@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { CalendarIcon, MapPinIcon, CurrencyDollarIcon, UsersIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
+import { CalendarIcon, MapPinIcon, UsersIcon, ArrowLeftIcon, ClockIcon } from '@heroicons/react/24/outline'
 
 const EventDetails = () => {
   const { id } = useParams()
@@ -42,7 +42,7 @@ const EventDetails = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b45309]"></div>
       </div>
     )
   }
@@ -51,8 +51,8 @@ const EventDetails = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Event not found</h2>
-          <Link to="/events" className="text-gray-700 hover:text-gray-900 font-semibold">
+          <h2 className="text-3xl font-serif text-[#1a1410] mb-4">Event not found</h2>
+          <Link to="/events" className="text-[#b45309] hover:text-[#8e3a00] font-bold uppercase tracking-widest text-sm border-b border-[#b45309] pb-1">
             ← Back to Events
           </Link>
         </div>
@@ -60,188 +60,145 @@ const EventDetails = () => {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link
-          to="/events"
-          className="inline-flex items-center text-gray-700 hover:text-gray-900 mb-6 font-semibold"
-        >
-          <ArrowLeftIcon className="h-5 w-5 mr-2" />
-          Back to Events
-        </Link>
+  const eventDate = new Date(event.date)
+  const formattedDate = eventDate.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+  const formattedTime = eventDate.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })
 
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-gray-200">
-          {/* Hero Image */}
-          {event.image_url ? (
-            <div className="relative h-96 md:h-[500px] overflow-hidden bg-gradient-to-br from-navy-800 to-navy-900">
-              <img
-                src={event.image_url}
-                alt={event.title || 'Event image'}
-                className="w-full h-full object-cover"
-                loading="eager"
-                onError={(e) => {
-                  e.target.style.display = 'none'
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white drop-shadow-lg">
-                <h1 className="text-4xl md:text-5xl font-luxury font-bold mb-2">{event.title}</h1>
-                <div className="flex items-center space-x-4 text-lg">
+  return (
+    <div className="min-h-screen bg-white font-sans text-[#1a1410]">
+
+      {/* Navbar Placeholder/Spacer if needed, but assuming global navbar handles it */}
+      <div className="pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6">
+
+          {/* Breadcrumb / Back Link */}
+          <Link
+            to="/events"
+            className="inline-flex items-center text-gray-400 hover:text-[#b45309] mb-8 text-xs font-bold uppercase tracking-widest transition-colors"
+          >
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
+            Back to Events
+          </Link>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20">
+
+            {/* Left Column: Image & Details */}
+            <div className="lg:col-span-2">
+
+              {/* Event Title Section */}
+              <div className="mb-8">
+                <span className="text-[#b45309] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">
+                  {event.category || 'Event'}
+                </span>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-6">
+                  {event.title}
+                </h1>
+
+                <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 font-medium uppercase tracking-wider">
                   <div className="flex items-center">
-                    <MapPinIcon className="h-5 w-5 mr-2" />
+                    <CalendarIcon className="h-5 w-5 mr-2 text-[#b45309]" />
+                    {formattedDate}
+                  </div>
+                  <div className="flex items-center">
+                    <ClockIcon className="h-5 w-5 mr-2 text-[#b45309]" />
+                    {formattedTime}
+                  </div>
+                  <div className="flex items-center">
+                    <MapPinIcon className="h-5 w-5 mr-2 text-[#b45309]" />
                     {event.location}
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-900 p-8 md:p-12 text-white">
-              <h1 className="text-4xl md:text-5xl font-luxury font-bold mb-4">{event.title}</h1>
-              <div className="flex items-center space-x-4 text-lg">
-                <div className="flex items-center">
-                  <MapPinIcon className="h-5 w-5 mr-2" />
-                  {event.location}
-                </div>
-              </div>
-            </div>
-          )}
 
-          <div className="p-8 md:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content */}
-              <div className="lg:col-span-2">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">About This Event</h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">
-                    {event.description}
+              {/* Hero Image */}
+              <div className="w-full h-[400px] md:h-[500px] bg-gray-100 rounded-none overflow-hidden mb-12 relative shadow-xl">
+                <img
+                  src={event.image_url}
+                  alt={event.title}
+                  className="w-full h-full object-cover"
+                />
+                {/* Decorative Overlay */}
+                <div className="absolute inset-0 ring-1 ring-black/5"></div>
+              </div>
+
+              {/* Description */}
+              <div className="prose max-w-none text-gray-600 leading-relaxed mb-16">
+                <h3 className="text-2xl font-serif text-[#1a1410] mb-6">About the Event</h3>
+                <p className="whitespace-pre-wrap">{event.description}</p>
+              </div>
+
+              {/* Sessions List (if any) */}
+              {event.sessions && event.sessions.length > 0 && (
+                <div className="mb-12 border-t border-gray-100 pt-12">
+                  <h3 className="text-2xl font-serif text-[#1a1410] mb-8">Schedule</h3>
+                  <div className="space-y-4">
+                    {event.sessions.map((session, idx) => (
+                      <div key={session.id} className="flex flex-col md:flex-row md:items-center justify-between p-6 bg-gray-50 border border-gray-100 hover:border-[#b45309]/30 transition-colors">
+                        <div className="mb-4 md:mb-0">
+                          <div className="text-xs font-bold text-[#b45309] uppercase tracking-wider mb-1">Session {idx + 1}</div>
+                          <div className="font-serif text-xl">{new Date(session.start_time).toLocaleDateString('en-IN', { weekday: 'long', month: 'short', day: 'numeric' })}</div>
+                        </div>
+                        <div className="flex items-center text-gray-500 font-medium">
+                          <ClockIcon className="h-5 w-5 mr-3 text-gray-400" />
+                          {new Date(session.start_time).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })} - {new Date(session.end_time).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* Right Column: Booking Card (Sticky) */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-32">
+                <div className="bg-white p-8 md:p-10 border border-gray-200 shadow-2xl relative overflow-hidden">
+
+                  {/* Decorative Top Border */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#1a1410]" />
+
+                  <div className="text-center mb-8">
+                    <p className="text-sm text-gray-400 uppercase tracking-widest mb-2 font-bold">Tickets starting at</p>
+                    <p className="text-5xl font-serif text-[#1a1410]">₹{event.price.toLocaleString('en-IN')}</p>
+                  </div>
+
+                  <div className="space-y-6 mb-8">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                      <span className="text-gray-500 text-sm font-medium">Date</span>
+                      <span className="text-[#1a1410] font-bold">{new Date(event.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                      <span className="text-gray-500 text-sm font-medium">Time</span>
+                      <span className="text-[#1a1410] font-bold">{formattedTime}</span>
+                    </div>
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                      <span className="text-gray-500 text-sm font-medium">Availability</span>
+                      <span className={`font-bold ${!event.remaining_seats ? 'text-red-500' : 'text-green-600'}`}>
+                        {event.remaining_seats ? `${event.remaining_seats} Seats Left` : 'Sold Out'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleBookNow}
+                    disabled={!event.remaining_seats || event.remaining_seats <= 0}
+                    className="w-full bg-[#b45309] text-white py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-[#8e3a00] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                  >
+                    {!event.remaining_seats || event.remaining_seats <= 0
+                      ? 'Sold Out'
+                      : isAuthenticated
+                        ? 'Book Tickets'
+                        : 'Sign In to Book'}
+                  </button>
+
+                  <p className="text-center text-xs text-gray-400 mt-6 leading-relaxed">
+                    Secure booking powered by EventEase.<br />Instant confirmation via email.
                   </p>
                 </div>
-
-                {event.sessions && event.sessions.length > 0 && (
-                  <div className="mt-8">
-                    <h3 className="text-2xl font-luxury font-bold text-navy-900 mb-4">Schedule</h3>
-                    <div className="space-y-3">
-                      {event.sessions.map((session, idx) => (
-                        <div key={session.id} className="bg-gradient-to-r from-gray-50 to-gray-100/50 p-5 rounded-lg border border-gray-200">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="font-semibold text-gray-900">Session {idx + 1}</p>
-                              <p className="text-sm text-gray-600 mt-1">
-                                {new Date(session.start_time).toLocaleString('en-IN', {
-                                  weekday: 'long',
-                                  month: 'long',
-                                  day: 'numeric',
-                                  hour: 'numeric',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            </div>
-                            <div className="text-sm text-gray-600">
-                              <p>
-                                {new Date(session.start_time).toLocaleTimeString('en-IN', {
-                                  hour: 'numeric',
-                                  minute: '2-digit'
-                                })}
-                                {' - '}
-                                {new Date(session.end_time).toLocaleTimeString('en-IN', {
-                                  hour: 'numeric',
-                                  minute: '2-digit'
-                                })}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Sidebar */}
-              <div className="lg:col-span-1">
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 sticky top-8 border border-gray-200">
-                  <div className="space-y-6">
-                    {/* Price */}
-                    <div className="text-center pb-6 border-b border-gray-300">
-                      <p className="text-sm text-gray-600 mb-1">Price</p>
-                      <p className="text-4xl font-bold text-gray-900">₹{event.price.toLocaleString('en-IN')}</p>
-                      <p className="text-sm text-gray-500 mt-1">per ticket</p>
-                    </div>
-
-                    {/* Event Details */}
-                    <div className="space-y-4">
-                      <div className="flex items-start">
-                        <CalendarIcon className="h-5 w-5 text-gray-700 mr-3 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">
-                            {new Date(event.date).toLocaleDateString('en-IN', {
-                              weekday: 'long',
-                              month: 'long',
-                              day: 'numeric',
-                              year: 'numeric'
-                            })}
-                          </p>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {new Date(event.date).toLocaleTimeString('en-IN', {
-                              hour: 'numeric',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <MapPinIcon className="h-5 w-5 text-gray-700 mr-3 mt-0.5 flex-shrink-0" />
-                        <p className="text-sm text-gray-700">{event.location}</p>
-                      </div>
-
-                      <div className="flex items-start">
-                        <UsersIcon className="h-5 w-5 text-gray-700 mr-3 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">
-                            {event.remaining_seats || 0} of {event.total_seats} seats available
-                          </p>
-                          <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-gray-900 h-2 rounded-full transition-all"
-                              style={{
-                                width: `${((event.total_seats - (event.remaining_seats || 0)) / event.total_seats) * 100}%`
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Book Button */}
-                    <button
-                      onClick={handleBookNow}
-                      disabled={!event.remaining_seats || event.remaining_seats <= 0}
-                      className="bg-gray-900 text-white w-full py-4 rounded-lg font-bold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
-                    >
-                      {!event.remaining_seats || event.remaining_seats <= 0
-                        ? 'Sold Out'
-                        : isAuthenticated
-                        ? 'Book Now'
-                        : 'Sign In to Book'}
-                    </button>
-
-                    {(!event.remaining_seats || event.remaining_seats <= 0) && (
-                      <p className="text-center text-sm text-red-700 font-semibold">
-                        This event is fully booked
-                      </p>
-                    )}
-
-                    {event.remaining_seats > 0 && event.remaining_seats < 10 && (
-                      <p className="text-center text-sm text-orange-700 font-semibold">
-                        ⚠️ Only {event.remaining_seats} seats remaining!
-                      </p>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
