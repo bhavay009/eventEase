@@ -63,21 +63,64 @@ const Home = () => {
     }
   }
 
-  const getCategoryFallbackImage = (category = 'Event') => {
+  const getCategoryFallbackImage = (category = 'Event', id = '') => {
     const cat = category.toLowerCase()
+    
+    // Seeded random-ish index from ID string
+    const getIndex = (arr) => {
+      const idStr = String(id || '')
+      if (!idStr) return 0
+      const sum = idStr.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+      return sum % arr.length
+    }
+
+    const images = {
+      party: [
+        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800', // Confetti Crowd
+        'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800', // Nightclub vibe
+        'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800', // Party crowd
+        'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=800', // Champagne/Toast
+        'https://images.unsplash.com/photo-1514525253361-b83f859b71c0?auto=format&fit=crop&q=80&w=800'  // Stage Lights
+      ],
+      concert: [
+        'https://images.unsplash.com/photo-1459749411177-042180ceea7d?auto=format&fit=crop&q=80&w=800', // Concert Stage
+        'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=800', // Festival
+        'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=800', // Music Gear
+        'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=800', // Singing
+        'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&q=80&w=800'  // Live Lighting
+      ],
+      comedy: [
+        'https://images.unsplash.com/photo-1527224857813-f5a7414bc907?auto=format&fit=crop&q=80&w=800', // Brick wall mic
+        'https://images.unsplash.com/photo-1585699324551-f6c309eedee6?auto=format&fit=crop&q=80&w=800', // Theatre Stage
+        'https://images.unsplash.com/photo-1543840950-fa704bc99955?auto=format&fit=crop&q=80&w=800', // Spotlight
+        'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=800'  // Crowd laughing
+      ],
+      tech: [
+        'https://images.unsplash.com/photo-1505373630103-f21ee09d7a8e?auto=format&fit=crop&q=80&w=800', // Conference Room
+        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800', // Collaboration
+        'https://images.unsplash.com/photo-1475721027187-40aeae77c9d3?auto=format&fit=crop&q=80&w=800', // Speaker
+        'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=800'  // Tech event
+      ],
+      general: [
+        'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800', // Event Decor
+        'https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&q=80&w=800', // Outdoor Gathering
+        'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&q=80&w=800'  // Networking
+      ]
+    }
+
     if (cat.includes('party') || cat.includes('night') || cat.includes('house')) {
-      return 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800' // High energy party
+      return images.party[getIndex(images.party)]
     }
     if (cat.includes('music') || cat.includes('concert')) {
-      return 'https://images.unsplash.com/photo-1459749411177-042180ceea7d?auto=format&fit=crop&q=80&w=800' // Concert stage
+      return images.concert[getIndex(images.concert)]
     }
     if (cat.includes('comedy') || cat.includes('standup')) {
-      return 'https://images.unsplash.com/photo-1514525253361-b83f859b71c0?auto=format&fit=crop&q=80&w=800' // Theatre stage
+      return images.comedy[getIndex(images.comedy)]
     }
     if (cat.includes('tech') || cat.includes('workshop')) {
-      return 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800' // Modern meeting/tech
+      return images.tech[getIndex(images.tech)]
     }
-    return 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=800' // General crowd
+    return images.general[getIndex(images.general)]
   }
 
   const getDateParts = (dateString) => {
@@ -229,16 +272,16 @@ const Home = () => {
           <div className="flex justify-between items-end mb-12">
             <div>
               <h2 className="text-3xl md:text-5xl font-black uppercase text-white tracking-tight mb-2">Curated Kickbacks</h2>
-              <p className="text-[#e6192b] text-xs uppercase tracking-widest font-bold">Which are available to use.</p>
+              <p className="text-[#e6192b] text-[10px] uppercase tracking-[0.3em] font-black">PRIVATE SESSIONS & EXCLUSIVE INVITE-ONLY VIBES.</p>
             </div>
             <Link to="/events?tab=local" className="hidden md:flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-white transition-colors">
               Explore Network <ChevronRightIcon className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {hostLoading ? (
-              [1, 2, 3, 4].map(i => <div key={i} className="h-64 bg-[#111] rounded-2xl animate-pulse border border-[#1a1a1a]" />)
+              [1, 2, 3].map(i => <div key={i} className="h-64 bg-[#111] rounded-3xl animate-pulse border border-[#222]" />)
             ) : displayLocalEvents.length === 0 ? (
               <div className="col-span-full py-16 text-center border border-dashed border-[#333] rounded-3xl bg-[#0a0a0a]">
                 <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">The Underground is Quiet</h3>
@@ -262,42 +305,52 @@ const Home = () => {
                     className="group cursor-pointer"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
-                    <div className="bg-[#111] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
                       {/* Image Area */}
-                      <div className="relative h-44 overflow-hidden bg-[#0a0a0a]">
+                      <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
                         <img 
-                          src={event.image_url || getCategoryFallbackImage(event.category)} 
+                          src={event.image_url || getCategoryFallbackImage(event.category, event.id)} 
                           alt={event.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=800'
+                          }}
                         />
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent" />
+                        {/* Overlay for better text separation */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
                         
-                        {/* Date Badge - Compact */}
-                        <div className="absolute top-2 left-2 bg-white text-black rounded-md px-2 py-1 text-center shadow-lg min-w-[36px] z-10">
-                          <p className="text-[7px] font-bold uppercase leading-none">{month}</p>
-                          <p className="text-sm font-black leading-none mt-0.5">{day}</p>
+                        {/* Date Badge */}
+                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px] z-10">
+                          <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
+                          <p className="text-lg font-black leading-none mt-0.5">{day}</p>
                         </div>
-                        {/* Verified Host Tag - Simple */}
-                        <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md text-white px-2 py-0.5 rounded-full border border-white/5 z-10">
-                          <span className="text-[7px] font-bold uppercase tracking-wider flex items-center gap-1">
-                             <span className="w-1 h-1 rounded-full bg-green-500"></span> Host
+                        {/* Verified Host Tag */}
+                        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/10 z-10">
+                          <span className="text-[8px] font-bold uppercase tracking-widest flex items-center gap-1">
+                             <span className="w-1 h-1 rounded-full bg-green-500"></span> Verified Host
                           </span>
                         </div>
                       </div>
-                      {/* Info Area - Tightened */}
-                      <div className="p-3">
-                        <h3 className="text-[13px] font-bold text-white leading-tight line-clamp-1 mb-1.5 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
-                        <div className="space-y-1 mb-2">
-                          <p className="text-[10px] text-gray-500 flex items-center gap-1">
-                            <MapPinIcon className="w-3 h-3 flex-shrink-0" />
+                      {/* Info Area */}
+                      <div className="p-4 pt-3">
+                        <h3 className="text-[15px] font-bold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
+                        <div className="space-y-1.5 mb-3">
+                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                            <MapPinIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
                             <span className="truncate">{event.location}</span>
                           </p>
+                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                            <CalendarIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
+                            <span>{weekday}, {eventDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                          </p>
                         </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a]">
-                          <span className="text-white font-bold text-xs">₹{(event.price || 499).toLocaleString('en-IN')}</span>
-                          <span className="text-[8px] font-bold uppercase tracking-widest text-[#e6192b]">
-                            View →
+                        <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
+                          <div>
+                            <span className="text-white font-bold text-sm">₹{(event.price || 499).toLocaleString('en-IN')}</span>
+                            <span className="text-gray-500 text-[10px] ml-1">onwards</span>
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#e6192b] group-hover:text-white transition-colors">
+                            Explore →
                           </span>
                         </div>
                       </div>
@@ -352,10 +405,10 @@ const Home = () => {
              ))}
           </div>
 
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[400px]">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[440px]">
             <AnimatePresence mode='popLayout'>
             {loading ? (
-              [1, 2, 3, 4, 5].map(i => <div key={i} className="h-64 bg-[#111] rounded-2xl animate-pulse border border-[#1a1a1a]" />)
+              [1, 2, 3].map(i => <div key={i} className="h-[440px] bg-[#111111] border border-[#222] rounded-3xl animate-pulse" />)
             ) : filteredEvents.length === 0 ? (
               <motion.div 
                  initial={{ opacity: 0 }} 
@@ -383,28 +436,45 @@ const Home = () => {
                     className="group cursor-pointer"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
-                    <div className="bg-[#111] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-[#333] hover:-translate-y-1 transition-all duration-300">
-                      {/* Image */}
-                      <div className="relative h-44 overflow-hidden bg-[#0a0a0a]">
+                    <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
+                      {/* Image Area */}
+                      <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
                         <img 
-                          src={event.image_url || getCategoryFallbackImage(event.category)} 
+                          src={event.image_url || getCategoryFallbackImage(event.category, event.id)} 
                           alt={event.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&q=80&w=800'
+                          }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent" />
-
+                        {/* Overlay for better text separation */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
+                        
                         {/* Date Badge */}
-                        <div className="absolute top-2 left-2 bg-white text-black rounded-md px-1.5 py-1 text-center shadow-lg min-w-[32px] z-10">
-                          <p className="text-[6px] font-bold uppercase leading-none">{month}</p>
-                          <p className="text-xs font-black leading-none mt-0.5">{day}</p>
+                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px] z-10">
+                          <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
+                          <p className="text-lg font-black leading-none mt-0.5">{day}</p>
                         </div>
                       </div>
-                      {/* Info */}
-                      <div className="p-3">
-                        <h3 className="text-[13px] font-semibold text-white leading-tight line-clamp-1 mb-1.5 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
-                        <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a]">
-                          <span className="text-white font-bold text-xs">₹{(event.price || 499).toLocaleString('en-IN')}</span>
-                          <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">
+                      {/* Info Area */}
+                      <div className="p-4 pt-3">
+                        <h3 className="text-[15px] font-bold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
+                        <div className="space-y-1.5 mb-3">
+                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                            <MapPinIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
+                            <span className="truncate">{event.location}</span>
+                          </p>
+                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
+                            <CalendarIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
+                            <span>{weekday}, {eventDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
+                          <div>
+                            <span className="text-white font-bold text-sm">₹{(event.price || 499).toLocaleString('en-IN')}</span>
+                            <span className="text-gray-500 text-[10px] ml-1">onwards</span>
+                          </div>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#e6192b] group-hover:text-white transition-colors">
                             Book →
                           </span>
                         </div>
