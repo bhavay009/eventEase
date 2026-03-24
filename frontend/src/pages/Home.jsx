@@ -236,9 +236,9 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {hostLoading ? (
-              [1, 2, 3].map(i => <div key={i} className="h-64 bg-[#111] rounded-3xl animate-pulse border border-[#222]" />)
+              [1, 2, 3, 4].map(i => <div key={i} className="h-64 bg-[#111] rounded-2xl animate-pulse border border-[#1a1a1a]" />)
             ) : displayLocalEvents.length === 0 ? (
               <div className="col-span-full py-16 text-center border border-dashed border-[#333] rounded-3xl bg-[#0a0a0a]">
                 <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">The Underground is Quiet</h3>
@@ -262,49 +262,42 @@ const Home = () => {
                     className="group cursor-pointer"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
-                    <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
+                    <div className="bg-[#111] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300">
                       {/* Image Area */}
-                      <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
+                      <div className="relative h-44 overflow-hidden bg-[#0a0a0a]">
                         <img 
                           src={event.image_url || getCategoryFallbackImage(event.category)} 
                           alt={event.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        {/* Overlay for better text separation */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent" />
                         
-                        {/* Date Badge */}
-                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px] z-10">
-                          <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
-                          <p className="text-lg font-black leading-none mt-0.5">{day}</p>
+                        {/* Date Badge - Compact */}
+                        <div className="absolute top-2 left-2 bg-white text-black rounded-md px-2 py-1 text-center shadow-lg min-w-[36px] z-10">
+                          <p className="text-[7px] font-bold uppercase leading-none">{month}</p>
+                          <p className="text-sm font-black leading-none mt-0.5">{day}</p>
                         </div>
-                        {/* Verified Host Tag */}
-                        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/10 z-10">
-                          <span className="text-[8px] font-bold uppercase tracking-widest flex items-center gap-1">
-                             <span className="w-1 h-1 rounded-full bg-green-500"></span> Verified Host
+                        {/* Verified Host Tag - Simple */}
+                        <div className="absolute top-2 right-2 bg-black/40 backdrop-blur-md text-white px-2 py-0.5 rounded-full border border-white/5 z-10">
+                          <span className="text-[7px] font-bold uppercase tracking-wider flex items-center gap-1">
+                             <span className="w-1 h-1 rounded-full bg-green-500"></span> Host
                           </span>
                         </div>
                       </div>
-                      {/* Info Area */}
-                      <div className="p-4 pt-3">
-                        <h3 className="text-[15px] font-bold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
-                        <div className="space-y-1.5 mb-3">
-                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                            <MapPinIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
+                      {/* Info Area - Tightened */}
+                      <div className="p-3">
+                        <h3 className="text-[13px] font-bold text-white leading-tight line-clamp-1 mb-1.5 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
+                        <div className="space-y-1 mb-2">
+                          <p className="text-[10px] text-gray-500 flex items-center gap-1">
+                            <MapPinIcon className="w-3 h-3 flex-shrink-0" />
                             <span className="truncate">{event.location}</span>
                           </p>
-                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                            <CalendarIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-                            <span>{weekday}, {eventDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                          </p>
                         </div>
-                        <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
-                          <div>
-                            <span className="text-white font-bold text-sm">₹{(event.price || 499).toLocaleString('en-IN')}</span>
-                            <span className="text-gray-500 text-[10px] ml-1">onwards</span>
-                          </div>
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#e6192b] group-hover:text-white transition-colors">
-                            Explore →
+                        <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a]">
+                          <span className="text-white font-bold text-xs">₹{(event.price || 499).toLocaleString('en-IN')}</span>
+                          <span className="text-[8px] font-bold uppercase tracking-widest text-[#e6192b]">
+                            View →
                           </span>
                         </div>
                       </div>
@@ -359,22 +352,22 @@ const Home = () => {
              ))}
           </div>
 
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[440px]">
+          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[400px]">
             <AnimatePresence mode='popLayout'>
             {loading ? (
-              [1, 2, 3, 4].map(i => <div key={i} className="h-[440px] bg-[#111111] border border-[#222] rounded-3xl animate-pulse" />)
+              [1, 2, 3, 4, 5].map(i => <div key={i} className="h-64 bg-[#111] rounded-2xl animate-pulse border border-[#1a1a1a]" />)
             ) : filteredEvents.length === 0 ? (
               <motion.div 
                  initial={{ opacity: 0 }} 
                  animate={{ opacity: 1 }} 
-                 className="col-span-full text-center py-20 bg-[#111] border border-dashed border-[#333] rounded-3xl"
+                 className="col-span-full text-center py-20 bg-[#0a0a0a] border border-[#1a1a1a] rounded-2xl"
               >
-                 <h3 className="text-xl font-bold text-white mb-2 uppercase">No events found</h3>
-                 <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">Try adjusting your category filter</p>
+                 <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">No events found</h3>
+                 <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold">Try adjusting your filters</p>
                  <button onClick={() => setActiveCategory('All')} className="mt-6 text-[#e6192b] text-[10px] font-bold tracking-widest uppercase border-b border-[#e6192b] pb-1 hover:text-white hover:border-white transition-colors">Clear Filters</button>
               </motion.div>
             ) : (
-              filteredEvents.slice(0, 8).map((event, index) => {
+              filteredEvents.slice(0, 10).map((event, index) => {
                 const eventDate = new Date(event.date)
                 const month = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()
                 const day = eventDate.getDate()
@@ -390,48 +383,28 @@ const Home = () => {
                     className="group cursor-pointer"
                     onClick={() => navigate(`/events/${event.id}`)}
                   >
-                    <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
+                    <div className="bg-[#111] border border-[#1a1a1a] rounded-xl overflow-hidden hover:border-[#333] hover:-translate-y-1 transition-all duration-300">
                       {/* Image */}
-                      <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
+                      <div className="relative h-44 overflow-hidden bg-[#0a0a0a]">
                         <img 
                           src={event.image_url || getCategoryFallbackImage(event.category)} 
                           alt={event.title} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
-                        {/* Overlay for better text separation */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent" />
+
                         {/* Date Badge */}
-                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px]">
-                          <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
-                          <p className="text-lg font-black leading-none mt-0.5">{day}</p>
+                        <div className="absolute top-2 left-2 bg-white text-black rounded-md px-1.5 py-1 text-center shadow-lg min-w-[32px] z-10">
+                          <p className="text-[6px] font-bold uppercase leading-none">{month}</p>
+                          <p className="text-xs font-black leading-none mt-0.5">{day}</p>
                         </div>
-                        {/* Category Tag */}
-                        {event.category && (
-                          <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full">
-                            <span className="text-[9px] font-bold uppercase tracking-wider">{event.category}</span>
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#111] to-transparent" />
                       </div>
                       {/* Info */}
-                      <div className="p-4 pt-3">
-                        <h3 className="text-[15px] font-bold text-white leading-snug line-clamp-2 mb-2 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
-                        <div className="space-y-1.5 mb-3">
-                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                            <MapPinIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-                            <span className="truncate">{event.location}</span>
-                          </p>
-                          <p className="text-xs text-gray-400 flex items-center gap-1.5">
-                            <CalendarIcon className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-                            <span>{weekday}, {eventDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between pt-3 border-t border-[#1a1a1a]">
-                          <div>
-                            <span className="text-white font-bold text-sm">₹{(event.price || 499).toLocaleString('en-IN')}</span>
-                            <span className="text-gray-500 text-[10px] ml-1">onwards</span>
-                          </div>
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#e6192b] group-hover:text-white transition-colors">
+                      <div className="p-3">
+                        <h3 className="text-[13px] font-semibold text-white leading-tight line-clamp-1 mb-1.5 group-hover:text-[#e6192b] transition-colors">{event.title}</h3>
+                        <div className="flex items-center justify-between pt-2 border-t border-[#1a1a1a]">
+                          <span className="text-white font-bold text-xs">₹{(event.price || 499).toLocaleString('en-IN')}</span>
+                          <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">
                             Book →
                           </span>
                         </div>
