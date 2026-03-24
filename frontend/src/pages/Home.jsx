@@ -63,6 +63,23 @@ const Home = () => {
     }
   }
 
+  const getCategoryFallbackImage = (category = 'Event') => {
+    const cat = category.toLowerCase()
+    if (cat.includes('party') || cat.includes('night') || cat.includes('house')) {
+      return 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800' // High energy party
+    }
+    if (cat.includes('music') || cat.includes('concert')) {
+      return 'https://images.unsplash.com/photo-1459749411177-042180ceea7d?auto=format&fit=crop&q=80&w=800' // Concert stage
+    }
+    if (cat.includes('comedy') || cat.includes('standup')) {
+      return 'https://images.unsplash.com/photo-1514525253361-b83f859b71c0?auto=format&fit=crop&q=80&w=800' // Theatre stage
+    }
+    if (cat.includes('tech') || cat.includes('workshop')) {
+      return 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800' // Modern meeting/tech
+    }
+    return 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=800' // General crowd
+  }
+
   const getDateParts = (dateString) => {
     const date = new Date(dateString)
     return {
@@ -248,29 +265,25 @@ const Home = () => {
                     <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
                       {/* Image Area */}
                       <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
-                        {event.image_url ? (
-                          <img 
-                            src={event.image_url} 
-                            alt={event.title} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#111]">
-                            <CalendarIcon className="w-10 h-10 text-[#222]" />
-                          </div>
-                        )}
+                        <img 
+                          src={event.image_url || getCategoryFallbackImage(event.category)} 
+                          alt={event.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {/* Overlay for better text separation */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
+                        
                         {/* Date Badge */}
-                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px]">
+                        <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px] z-10">
                           <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
                           <p className="text-lg font-black leading-none mt-0.5">{day}</p>
                         </div>
                         {/* Verified Host Tag */}
-                        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full border border-white/10">
+                        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-3 py-1 rounded-full border border-white/10 z-10">
                           <span className="text-[8px] font-bold uppercase tracking-widest flex items-center gap-1">
                              <span className="w-1 h-1 rounded-full bg-green-500"></span> Verified Host
                           </span>
                         </div>
-                        <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#111] to-transparent" />
                       </div>
                       {/* Info Area */}
                       <div className="p-4 pt-3">
@@ -380,17 +393,13 @@ const Home = () => {
                     <div className="bg-[#111] border border-[#1a1a1a] rounded-2xl overflow-hidden hover:border-[#333] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300">
                       {/* Image */}
                       <div className="relative h-48 overflow-hidden bg-[#0a0a0a]">
-                        {event.image_url ? (
-                          <img 
-                            src={event.image_url} 
-                            alt={event.title} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#111]">
-                            <CalendarIcon className="w-10 h-10 text-[#333]" />
-                          </div>
-                        )}
+                        <img 
+                          src={event.image_url || getCategoryFallbackImage(event.category)} 
+                          alt={event.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {/* Overlay for better text separation */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#111] via-transparent to-transparent opacity-60" />
                         {/* Date Badge */}
                         <div className="absolute top-3 left-3 bg-white text-black rounded-lg px-2.5 py-1.5 text-center shadow-lg min-w-[48px]">
                           <p className="text-[9px] font-bold uppercase leading-none">{month}</p>
