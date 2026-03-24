@@ -6,7 +6,6 @@ const Signup = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [userType, setUserType] = useState('customer') // 'customer' or 'organizer'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { signup } = useAuth()
@@ -23,9 +22,8 @@ const Signup = () => {
 
     setLoading(true)
 
-    // Pass role based on userType
-    const role = userType === 'organizer' ? 'admin' : 'attendee'
-    const result = await signup(name, email, password, role)
+    // Unified Identity: All users belong to a single generic tier
+    const result = await signup(name, email, password, 'attendee')
 
     if (result.success) {
       navigate('/dashboard')
@@ -54,24 +52,6 @@ const Signup = () => {
 
         {/* Minimal Form */}
         <div className="bg-white p-0">
-
-          {/* User Type Selection */}
-          <div className="flex gap-4 mb-8 border-b border-gray-100 pb-8">
-            <button
-              type="button"
-              onClick={() => setUserType('customer')}
-              className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${userType === 'customer' ? 'bg-[#1a1410] text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
-            >
-              Attend
-            </button>
-            <button
-              type="button"
-              onClick={() => setUserType('organizer')}
-              className={`flex-1 py-3 text-xs font-bold uppercase tracking-widest transition-all ${userType === 'organizer' ? 'bg-[#b45309] text-white' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'}`}
-            >
-              Host
-            </button>
-          </div>
 
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="space-y-6">
@@ -137,7 +117,7 @@ const Signup = () => {
               disabled={loading}
               className="w-full py-4 bg-[#1a1410] text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-[#b45309] transition-all disabled:opacity-70"
             >
-              {loading ? 'Creating...' : `Create ${userType === 'organizer' ? 'Organizer' : 'Customer'} Account`}
+              {loading ? 'Creating...' : 'Create Account'}
             </button>
 
             <div className="text-center pt-4">

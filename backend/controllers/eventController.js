@@ -10,18 +10,17 @@ function mockEvents() {
     return x;
   };
   const data = [
-    { title: 'Arijit Live In Concert', category: 'concerts', location: 'Mumbai, Maharashtra', price: 2499, total_seats: 5000, image_url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1200&q=80' },
-    { title: 'Stand-Up Night with Zakir Khan', category: 'comedy', location: 'Delhi, NCR', price: 799, total_seats: 1200, image_url: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1200&q=80' },
-    { title: 'Theatre: Hamlet Reimagined', category: 'theatre', location: 'Bengaluru, Karnataka', price: 1299, total_seats: 600, image_url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1200&q=80' },
-    { title: 'EDM Night with DJ Snake', category: 'concerts', location: 'Goa', price: 1999, total_seats: 8000, image_url: 'https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?w=1200&q=80' },
-    { title: 'Startup Workshop: Fundraising 101', category: 'workshops', location: 'Pune, Maharashtra', price: 499, total_seats: 200, image_url: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=1200&q=80' },
-    { title: 'Classical Night: Pt. Hariprasad Chaurasia', category: 'concerts', location: 'Kolkata, West Bengal', price: 1499, total_seats: 900, image_url: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1200&q=80' },
-    { title: 'Food Fest: Taste of India', category: 'festivals', location: 'Jaipur, Rajasthan', price: 299, total_seats: 3000, image_url: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1200&q=80' },
-    { title: 'Yoga Retreat Weekend', category: 'workshops', location: 'Rishikesh, Uttarakhand', price: 999, total_seats: 150, image_url: 'https://images.unsplash.com/photo-1523413651479-597eb2da0ad6?w=1200&q=80' },
-    { title: 'Indie Music Night', category: 'concerts', location: 'Chennai, Tamil Nadu', price: 699, total_seats: 700, image_url: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1200&q=80' },
-    { title: 'Comedy Roast Battle', category: 'comedy', location: 'Hyderabad, Telangana', price: 899, total_seats: 1000, image_url: 'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1200&q=80' },
-    { title: 'Photography Walk', category: 'workshops', location: 'Udaipur, Rajasthan', price: 399, total_seats: 120, image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80' },
-    { title: 'Women In Tech Summit', category: 'workshops', location: 'Noida, NCR', price: 1599, total_seats: 1500, image_url: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=1200&q=80' }
+    { title: 'Diljit Dosanjh - Dil-Luminati Tour', category: 'concerts', location: 'JLN Stadium, Delhi', price: 6999, total_seats: 15000, image_url: '/event_edm.png' },
+    { title: 'Kisi Ko Batana Mat ft. Anubhav Singh Bassi', category: 'comedy', location: 'Auditorium, Mumbai', price: 999, total_seats: 1200, image_url: '/event_comedy.png' },
+    { title: 'Zomaland by Zomato', category: 'festivals', location: 'Mahalaxmi Race Course, Mumbai', price: 899, total_seats: 10000, image_url: '/event_vip.png' },
+    { title: 'Boiler Room: New Delhi', category: 'concerts', location: 'Secret Location, Delhi', price: 3499, total_seats: 800, image_url: '/event_edm.png' },
+    { title: 'Karan Aujla - It Was All A Dream', category: 'concerts', location: 'Pune, Maharashtra', price: 4999, total_seats: 5000, image_url: '/event_jazz.png' },
+    { title: 'Samay Raina Unfiltered', category: 'comedy', location: 'Kolkata, West Bengal', price: 1499, total_seats: 900, image_url: '/event_comedy.png' },
+    { title: 'Echoes of Earth - Greenest Music Festival', category: 'festivals', location: 'Bengaluru, Karnataka', price: 2499, total_seats: 3000, image_url: '/event_vip.png' },
+    { title: 'Candlelight: A Tribute to Coldplay', category: 'concerts', location: 'Royal Opera House, Mumbai', price: 1999, total_seats: 400, image_url: '/event_jazz.png' },
+    { title: 'Neon Night Kickback', category: 'house', location: 'Penthouse Vibe, Mumbai', price: 1500, total_seats: 50, image_url: '/event_jazz.png' },
+    { title: 'Underground Techno Set', category: 'party', location: 'Abandoned Warehouse, Delhi', price: 2000, total_seats: 120, image_url: '/event_edm.png' },
+    { title: 'Exclusive Rooftop Gathering', category: 'local', location: 'Secret Location, Goa', price: 3000, total_seats: 40, image_url: '/event_vip.png' }
   ];
   return data.map((e, i) => ({
     id: i + 1,
@@ -43,48 +42,98 @@ function mockEvents() {
 
 const getAllEvents = async (req, res) => {
   try {
-    // OPTIMIZATION: Serving 'Instant Demo API' data directly to avoid DB latency
-    // This provides a "Real API" feel with instant response times (<20ms)
-    // using the high-quality mock data structure.
+    const { search, category, location, date, source, page = 1, limit = 12 } = req.query;
 
-    await new Promise(resolve => setTimeout(resolve, 300)); // Tiny realistic network delay (optional, keeps it feeling 'real')
+    let dbEvents = [];
+    let includeMock = true;
 
-    const all = mockEvents();
-    const { search, category, location, date, page = 1, limit = 12 } = req.query;
+    // SCENARIO 1: Strict Host Parties (Used by Local Kickbacks)
+    if (source === 'database') {
+       dbEvents = await prisma.event.findMany({
+         where: { source_type: 'host' },
+         include: { bookings: true },
+         orderBy: { date: 'asc' }
+       });
+       includeMock = false; // Never show mock data in host parties
+    } 
+    // SCENARIO 2: ALL Events (Platform + Host + Mock)
+    else {
+       dbEvents = await prisma.event.findMany({
+         include: { bookings: true },
+         orderBy: { date: 'asc' }
+       });
+    }
 
-    // Filter Logic (In-Memory)
+    // Process DB Events
+    const processedDbEvents = dbEvents.map(e => {
+        const booked = e.bookings ? e.bookings.reduce((sum, b) => sum + b.seats, 0) : 0;
+        let targetDate = new Date(e.date);
+        
+        // Emulate upcoming dates for older records
+        if (targetDate < new Date()) {
+           targetDate = new Date();
+           targetDate.setDate(targetDate.getDate() + Math.floor(Math.random() * 30) + 1);
+        }
+
+        return {
+           ...e,
+           date: targetDate.toISOString(),
+           source: 'Database',
+           booked_seats: booked,
+           remaining_seats: e.total_seats - booked
+        }
+    });
+
+    // Combine with Mock if applicable
+    let all = processedDbEvents;
+    if (includeMock) {
+       all = [...all, ...mockEvents()];
+    }
+
+    // Comprehensive Filtering
     const q = (search || '').toLowerCase();
     const loc = (location || '').toLowerCase();
 
-    let filtered = all.filter(e =>
-      (!q || e.title.toLowerCase().includes(q) || e.description?.toLowerCase().includes(q)) &&
-      (!loc || e.location.toLowerCase().includes(loc)) &&
-      (!category || (e.category || '').toLowerCase() === category.toLowerCase())
-    );
+    let filtered = all.filter(e => {
+      const matchSearch = !q || e.title.toLowerCase().includes(q) || (e.description && e.description.toLowerCase().includes(q));
+      const matchLocation = !loc || e.location.toLowerCase().includes(loc);
+      
+      let matchCategory = true;
+      if (category) {
+        const cats = category.toLowerCase().split(',');
+        matchCategory = cats.some(c => (e.category || '').toLowerCase().includes(c.trim()));
+      }
 
-    // Date Filter
-    if (date) {
-      const filterDate = new Date(date).toDateString();
-      filtered = filtered.filter(e => new Date(e.date).toDateString() === filterDate);
-    }
+      let matchDate = true;
+      if (date) {
+        matchDate = new Date(e.date).toDateString() === new Date(date).toDateString();
+      }
 
-    // Pagination Logic
+      // If strict source requested, filtered at DB level already, but secondary check
+      if (source === 'database' && e.source_type !== 'host') return false;
+
+      return matchSearch && matchLocation && matchCategory && matchDate;
+    });
+
+    // Pagination
     const total = filtered.length;
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const totalPages = Math.ceil(total / limitNum);
     const start = (pageNum - 1) * limitNum;
 
-    // Add Stats (Bookings) - Simulating real data
-    const eventsWithStats = filtered.slice(start, start + limitNum).map(event => ({
-      ...event,
-      booked_seats: Math.floor(event.total_seats * 0.7), // Simulate 70% booked
-      remaining_seats: Math.floor(event.total_seats * 0.3)
-    }));
+    const resultEvents = filtered.slice(start, start + limitNum).map(event => {
+      if (event.source === 'Database') return event;
+      return {
+        ...event,
+        booked_seats: Math.floor(event.total_seats * 0.7),
+        remaining_seats: Math.floor(event.total_seats * 0.3)
+      };
+    });
 
     res.json({
       success: true,
-      events: eventsWithStats,
+      events: resultEvents,
       pagination: {
         currentPage: pageNum,
         totalPages,
@@ -92,8 +141,7 @@ const getAllEvents = async (req, res) => {
         itemsPerPage: limitNum,
         hasNextPage: pageNum < totalPages,
         hasPrevPage: pageNum > 1
-      },
-      source: 'Instant Demo API'
+      }
     });
 
   } catch (error) {
@@ -160,7 +208,7 @@ const createEvent = async (req, res) => {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { title, description, date, location, price, total_seats, image_url, sessions } = req.body;
+    const { title, description, date, location, price, total_seats, image_url, sessions, category } = req.body;
     const organizerId = req.user.userId; // Get organizer ID from authenticated user
 
     if (!organizerId) {
@@ -172,13 +220,15 @@ const createEvent = async (req, res) => {
     const event = await prisma.event.create({
       data: {
         title,
-        description,
+        description: description || 'Local Event configured by Host.',
         date: new Date(date),
         location,
-        price: parseFloat(price),
-        total_seats: parseInt(total_seats),
+        price: parseFloat(price) || 0,
+        total_seats: parseInt(total_seats) || 50,
+        category: category || 'open',
         image_url: image_url || null,
         organizer_id: organizerId,
+        source_type: 'host',
         sessions: sessions ? {
           create: sessions.map(s => ({
             start_time: new Date(s.start_time),
@@ -366,11 +416,64 @@ const getOrganizerEvents = async (req, res) => {
   }
 };
 
+const getEventGuests = async (req, res) => {
+  try {
+    const eventId = parseInt(req.params.id);
+    const organizerId = req.user.userId;
+
+    const event = await prisma.event.findUnique({ where: { id: eventId } });
+    if (!event || event.organizer_id !== organizerId) {
+      return res.status(403).json({ success: false, message: 'Unauthorized or event not found' });
+    }
+
+    const guests = await prisma.booking.findMany({
+      where: { event_id: eventId },
+      include: {
+        user: { select: { id: true, name: true, email: true } }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    res.json({ success: true, guests });
+  } catch (error) {
+    console.error('Error fetching guests:', error);
+    res.status(500).json({ success: false, message: 'Error fetching guests' });
+  }
+};
+
+const updateGuestStatus = async (req, res) => {
+  try {
+    const bookingId = parseInt(req.params.bookingId);
+    const { status } = req.body; // 'approved' or 'rejected'
+    const organizerId = req.user.userId;
+
+    const booking = await prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: { event: true }
+    });
+
+    if (!booking || booking.event.organizer_id !== organizerId) {
+      return res.status(403).json({ success: false, message: 'Unauthorized or booking not found' });
+    }
+
+    const updatedBooking = await prisma.booking.update({
+      where: { id: bookingId },
+      data: { payment_status: status } 
+    });
+
+    res.json({ success: true, booking: updatedBooking });
+  } catch (error) {
+    console.error('Error updating guest status:', error);
+    res.status(500).json({ success: false, message: 'Error updating status' });
+  }
+};
+
 module.exports = {
   getAllEvents,
   getEventById,
   createEvent,
   updateEvent,
   deleteEvent,
-  getOrganizerEvents
+  getOrganizerEvents,
+  getEventGuests,
+  updateGuestStatus
 };

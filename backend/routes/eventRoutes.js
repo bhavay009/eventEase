@@ -9,7 +9,9 @@ const {
   createEvent,
   updateEvent,
   deleteEvent,
-  getOrganizerEvents
+  getOrganizerEvents,
+  getEventGuests,
+  updateGuestStatus
 } = require('../controllers/eventController');
 
 const validateEvent = [
@@ -30,11 +32,13 @@ const validateEvent = [
 // Public routes
 router.get('/', getAllEvents);
 
-// Admin/Organizer routes - must be before /:id route
-router.get('/organizer/my-events', authenticateToken, requireAdmin, getOrganizerEvents);
-router.post('/', authenticateToken, requireAdmin, validateEvent, createEvent);
-router.put('/:id', authenticateToken, requireAdmin, validateEvent, updateEvent);
-router.delete('/:id', authenticateToken, requireAdmin, deleteEvent);
+// Unified Creator Routes - Native access granted to any valid session
+router.get('/organizer/my-events', authenticateToken, getOrganizerEvents);
+router.get('/organizer/:id/guests', authenticateToken, getEventGuests);
+router.put('/organizer/guest/:bookingId', authenticateToken, updateGuestStatus);
+router.post('/', authenticateToken, validateEvent, createEvent);
+router.put('/:id', authenticateToken, validateEvent, updateEvent);
+router.delete('/:id', authenticateToken, deleteEvent);
 
 // Public route - must be after specific routes
 router.get('/:id', getEventById);

@@ -27,6 +27,8 @@ model Event {
   price        Float
   total_seats  Int
   image_url    String?
+  category     String?   @default("open")
+  source_type  String    @default("platform")
   organizer_id Int
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
@@ -35,6 +37,7 @@ model Event {
   organizer    User      @relation(fields: [organizer_id], references: [id], onDelete: Cascade)
 
   @@index([organizer_id])
+  @@index([source_type])
 }
 
 model Session {

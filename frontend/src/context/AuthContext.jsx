@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user)
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
-        return { success: true }
+        return { success: true, user: data.user }
       } else {
         return { success: false, message: data.message }
       }
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
         setUser(data.user)
         localStorage.setItem('token', data.token)
         localStorage.setItem('user', JSON.stringify(data.user))
-        return { success: true }
+        return { success: true, user: data.user }
       } else {
         return { success: false, message: data.message || 'Signup failed' }
       }
