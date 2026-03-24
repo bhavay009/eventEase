@@ -14,9 +14,7 @@ const app = express();
 app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:5175', // Vite dev server (falls back when 5173/5174 busy)
-      'http://localhost:3000',
+      /^http:\/\/localhost:\d+$/, // Allow any local development port
       /https:\/\/.*\.vercel\.app$/, // Vercel frontend
       /https:\/\/.*\.onrender\.com$/ // Render backend (if needed)
     ];

@@ -57,8 +57,8 @@ export default {
         },
       },
       fontFamily: {
-        'luxury': ['Playfair Display', 'serif'],
-        'serif': ['Playfair Display', 'serif'],
+        'luxury': ['Inter', 'sans-serif'],
+        'serif': ['Inter', 'sans-serif'],
         'sans': ['Inter', 'sans-serif'],
       },
       backgroundImage: {

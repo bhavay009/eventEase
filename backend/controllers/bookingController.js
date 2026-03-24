@@ -47,7 +47,7 @@ const createBooking = async (req, res) => {
         event_id: parseInt(event_id),
         seats: parseInt(seats),
         amount,
-        payment_status: 'paid' // In production, integrate with payment gateway
+        payment_status: 'pending' // Defaults to pending so the Host can actively Approve/Reject
       },
       include: {
         event: {

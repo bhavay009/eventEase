@@ -13,6 +13,8 @@ import Booking from './pages/Booking'
 import Profile from './pages/Profile'
 import AdminManageEvents from './pages/AdminManageEvents'
 import AdminAnalytics from './pages/AdminAnalytics'
+import HostDashboard from './pages/HostDashboard'
+import HostManageEvent from './pages/HostManageEvent'
 
 function App() {
   return (
@@ -24,7 +26,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/events" element={<Events />} />
+            <Route 
+              path="/events" 
+              element={
+                <ProtectedRoute requireAuth={false} attendeeOnly>
+                  <Events />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/events/:id" element={<EventDetails />} />
             <Route
               path="/dashboard"
@@ -47,6 +56,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/host"
+              element={
+                <ProtectedRoute>
+                  <HostDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/host/event/:id"
+              element={
+                <ProtectedRoute>
+                  <HostManageEvent />
                 </ProtectedRoute>
               }
             />
