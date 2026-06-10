@@ -18,11 +18,20 @@ const Events = () => {
   const [searchParams] = useSearchParams()
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
-  // Read URL param to auto-activate Local Kickbacks tab
+  // Read URL params and initialize state
   useEffect(() => {
     const tab = searchParams.get('tab')
+    const query = searchParams.get('search')
+    const loc = searchParams.get('location')
+
     if (tab === 'local') {
       setActiveTab('local')
+    }
+    if (query) {
+      setSearch(query)
+    }
+    if (loc) {
+      setLocation(loc)
     }
   }, [searchParams])
 
@@ -233,12 +242,19 @@ const Events = () => {
                         <p className="text-lg font-black leading-none mt-0.5">{day}</p>
                       </div>
 
-                      {/* Category Tag */}
-                      {event.category && (
-                        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full">
-                          <span className="text-[9px] font-bold uppercase tracking-wider">{event.category}</span>
-                        </div>
-                      )}
+                      {/* Category & Source Tags */}
+                      <div className="absolute top-3 right-3 flex flex-col gap-2 items-end">
+                        {event.category && (
+                          <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1 rounded-full">
+                            <span className="text-[9px] font-bold uppercase tracking-wider">{event.category}</span>
+                          </div>
+                        )}
+                        {event.source && event.source !== 'Database' && (
+                          <div className="bg-[#e6192b] text-white px-3 py-1 rounded-full shadow-lg">
+                            <span className="text-[9px] font-bold uppercase tracking-wider">{event.source}</span>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Bottom Gradient */}
                       <div className="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-[#111] to-transparent" />

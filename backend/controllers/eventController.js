@@ -1,44 +1,8 @@
 const prisma = require('../config/db');
 const { validationResult } = require('express-validator');
+const { fetchExternalEvents, fetchExternalEventById } = require('../services/externalApiService');
 
-function mockEvents() {
-  const now = new Date();
-  const addDays = (d, n) => {
-    const x = new Date(d);
-    x.setDate(x.getDate() + n);
-    x.setHours(19, 30, 0, 0);
-    return x;
-  };
-  const data = [
-    { title: 'Diljit Dosanjh - Dil-Luminati Tour', category: 'concerts', location: 'JLN Stadium, Delhi', price: 6999, total_seats: 15000, image_url: '/event_edm.png' },
-    { title: 'Kisi Ko Batana Mat ft. Anubhav Singh Bassi', category: 'comedy', location: 'Auditorium, Mumbai', price: 999, total_seats: 1200, image_url: '/event_comedy.png' },
-    { title: 'Zomaland by Zomato', category: 'festivals', location: 'Mahalaxmi Race Course, Mumbai', price: 899, total_seats: 10000, image_url: '/event_vip.png' },
-    { title: 'Boiler Room: New Delhi', category: 'concerts', location: 'Secret Location, Delhi', price: 3499, total_seats: 800, image_url: '/event_edm.png' },
-    { title: 'Karan Aujla - It Was All A Dream', category: 'concerts', location: 'Pune, Maharashtra', price: 4999, total_seats: 5000, image_url: '/event_jazz.png' },
-    { title: 'Samay Raina Unfiltered', category: 'comedy', location: 'Kolkata, West Bengal', price: 1499, total_seats: 900, image_url: '/event_comedy.png' },
-    { title: 'Echoes of Earth - Greenest Music Festival', category: 'festivals', location: 'Bengaluru, Karnataka', price: 2499, total_seats: 3000, image_url: '/event_vip.png' },
-    { title: 'Candlelight: A Tribute to Coldplay', category: 'concerts', location: 'Royal Opera House, Mumbai', price: 1999, total_seats: 400, image_url: '/event_jazz.png' },
-    { title: 'Neon Night Kickback', category: 'house', location: 'Penthouse Vibe, Mumbai', price: 1500, total_seats: 50, image_url: '/event_jazz.png' },
-    { title: 'Underground Techno Set', category: 'party', location: 'Abandoned Warehouse, Delhi', price: 2000, total_seats: 120, image_url: '/event_edm.png' },
-    { title: 'Exclusive Rooftop Gathering', category: 'local', location: 'Secret Location, Goa', price: 3000, total_seats: 40, image_url: '/event_vip.png' }
-  ];
-  return data.map((e, i) => ({
-    id: i + 1,
-    title: e.title,
-    description: 'Premium event experience. Limited seats. Book now.',
-    date: addDays(now, i + 1),
-    location: e.location,
-    price: e.price,
-    total_seats: e.total_seats,
-    image_url: e.image_url,
-    category: e.category,
-    organizer_id: 1,
-    created_at: now,
-    updated_at: now,
-    sessions: [],
-    bookings: []
-  }));
-}
+// Mock events function removed in favor of real API
 
 const getAllEvents = async (req, res) => {
   try {
@@ -84,11 +48,15 @@ const getAllEvents = async (req, res) => {
         }
     });
 
-    // Combine with Mock if applicable
+    // Combine with External API results if applicable
     let all = processedDbEvents;
     if (includeMock) {
-       all = [...all, ...mockEvents()];
+       const externalEvents = await fetchExternalEvents({ search, category, location, date, page, limit });
+       all = [...all, ...externalEvents];
     }
+
+    // Sort all events by date to mix DB and External events correctly
+    all.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     // Comprehensive Filtering
     const q = (search || '').toLowerCase();
@@ -154,6 +122,19 @@ const getEventById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Handle string IDs (External/Ticketmaster)
+    if (isNaN(id)) {
+      const externalEvent = await fetchExternalEventById(id);
+      if (externalEvent) {
+        return res.json({
+          success: true,
+          event: externalEvent
+        });
+      }
+      return res.status(404).json({ success: false, message: 'External event not found' });
+    }
+
+    // Handle integer IDs (Local Database)
     const event = await prisma.event.findUnique({
       where: { id: parseInt(id) },
       include: {

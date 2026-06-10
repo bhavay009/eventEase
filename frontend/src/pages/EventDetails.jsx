@@ -196,17 +196,28 @@ const EventDetails = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={handleBookNow}
-                    disabled={!event.remaining_seats || event.remaining_seats <= 0}
-                    className="w-full bg-[#e6192b] text-white py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(230,25,43,0.2)]"
-                  >
-                    {!event.remaining_seats || event.remaining_seats <= 0
-                      ? 'Sold Out'
-                      : isAuthenticated
-                        ? 'Order Tickets Now'
-                        : 'Sign In to Order'}
-                  </button>
+                  {event.source === 'Ticketmaster' ? (
+                    <a
+                      href={event.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-[#0055ff] text-white py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black hover:scale-[1.02] transition-all text-center block shadow-[0_0_15px_rgba(0,85,255,0.2)]"
+                    >
+                      Buy on Ticketmaster
+                    </a>
+                  ) : (
+                    <button
+                      onClick={handleBookNow}
+                      disabled={!event.remaining_seats || event.remaining_seats <= 0}
+                      className="w-full bg-[#e6192b] text-white py-4 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(230,25,43,0.2)]"
+                    >
+                      {!event.remaining_seats || event.remaining_seats <= 0
+                        ? 'Sold Out'
+                        : isAuthenticated
+                          ? 'Order Tickets Now'
+                          : 'Sign In to Order'}
+                    </button>
+                  )}
 
                   <p className="text-center text-[10px] uppercase font-bold tracking-[0.1em] text-gray-500 mt-6 md:mt-8">
                     Secure checkout guaranteed.<br />Instant mobile delivery.

@@ -13,6 +13,10 @@ const Home = () => {
   const [activeCategory, setActiveCategory] = useState('All')
   const [uspIndex, setUspIndex] = useState(0)
   const uspPhrases = ['LOCAL HOUSE PARTIES', 'CURATED KICKBACKS', 'LIVE EXPERIENCES', 'UNDERGROUND SETS']
+  
+  // Search States
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchLocation, setSearchLocation] = useState('All Locations')
 
   const navigate = useNavigate()
   const { isAuthenticated, isOrganizer, isAdmin } = useAuth()
@@ -61,6 +65,13 @@ const Home = () => {
     } finally {
       setHostLoading(false)
     }
+  }
+
+  const handleSearch = () => {
+    const params = new URLSearchParams()
+    if (searchQuery) params.append('search', searchQuery)
+    if (searchLocation !== 'All Locations') params.append('location', searchLocation)
+    navigate(`/events?${params.toString()}`)
   }
 
   const getCategoryFallbackImage = (category = 'Event', id = '') => {
@@ -245,14 +256,28 @@ const Home = () => {
               <div className="flex-1 flex divide-x divide-[#333]">
                  <div className="px-6 py-2 w-1/2">
                     <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Keywords</p>
-                    <input type="text" placeholder="Search Artists..." className="bg-transparent border-none outline-none text-white w-full placeholder-gray-400 font-medium text-sm" />
+                    <input 
+                      type="text" 
+                      placeholder="Search Artists..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                      className="bg-transparent border-none outline-none text-white w-full placeholder-gray-400 font-medium text-sm" 
+                    />
                  </div>
                  <div className="px-6 py-2 w-1/2">
                     <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-1">Location</p>
-                    <select className="bg-transparent border-none outline-none text-white w-full cursor-pointer appearance-none font-medium text-sm">
+                    <select 
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="bg-transparent border-none outline-none text-white w-full cursor-pointer appearance-none font-medium text-sm"
+                    >
                        <option className="bg-[#111] text-white">All Locations</option>
                        <option className="bg-[#111] text-white">Mumbai</option>
                        <option className="bg-[#111] text-white">Delhi NCR</option>
+                       <option className="bg-[#111] text-white">Pune</option>
+                       <option className="bg-[#111] text-white">Bangalore</option>
+                       <option className="bg-[#111] text-white">Goa</option>
                     </select>
                  </div>
               </div>
